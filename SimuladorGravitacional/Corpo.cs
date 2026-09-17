@@ -15,7 +15,7 @@ namespace SimuladorGravitacional
         public double velY { get; set; }
         public double Raio()
         {
-            return Math.Cbrt((3 * massa) / 4 * Math.PI * densidade);
+            return Math.Cbrt((3 * massa) / (4 * Math.PI * densidade));
         }
     }
 }
