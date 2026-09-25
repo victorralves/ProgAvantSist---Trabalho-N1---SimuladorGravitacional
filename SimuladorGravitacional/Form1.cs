@@ -107,8 +107,15 @@ namespace SimuladorGravitacional
         {
             double proporcao = 16.0 / 9.0;
 
+            if (tableLayoutPanel1 == null || panel1 == null) return;
+            if (!tableLayoutPanel1.Controls.Contains(panel1)) return;
+
+            int row = tableLayoutPanel1.GetRow(panel1);
+            var rowHeights = tableLayoutPanel1.GetRowHeights();
+            if (row < 0 || row >= rowHeights.Length) return;
+
             int larguraDisponivel = tableLayoutPanel1.ClientSize.Width;
-            int alturaDisponivel = tableLayoutPanel1.GetRowHeights()[tableLayoutPanel1.GetRow(panel1)];
+            int alturaDisponivel = rowHeights[row];
 
             int largura;
             int altura;
