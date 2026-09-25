@@ -13,7 +13,10 @@ namespace SimuladorGravitacional
             corpos = new Corpo[qtdCorpos];
             for(int i = 0; i < qtdCorpos; i++)
             {
-                corpos[i] = new Corpo(GerarNome(), GerarNumero(minMassa, maxMassa), GerarNumero(minDensidade, maxDensidade), GerarPosicao(width), GerarPosicao(height));
+                Corpo novoCorpo = new Corpo(GerarNome(), GerarNumero(minMassa, maxMassa), GerarNumero(minDensidade, maxDensidade));
+                GerarPosicao(novoCorpo, width, height);
+                corpos[i] = novoCorpo;
+
             }
         }
 
@@ -31,10 +34,11 @@ namespace SimuladorGravitacional
             return nome;
         }
 
-        public double GerarPosicao(int limite)
+        public void GerarPosicao(Corpo corpo, int limiteX, int limiteY)
         {
             Random random = new Random();
-            return random.Next(limite);
+            corpo.posX = random.Next(limiteX - (int)corpo.Raio());
+            corpo.posY = random.Next(limiteY - (int)corpo.Raio());
         }
         
         public double GerarNumero(double min, double max)

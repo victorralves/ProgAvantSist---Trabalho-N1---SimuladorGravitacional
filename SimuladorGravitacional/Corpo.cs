@@ -18,13 +18,13 @@ namespace SimuladorGravitacional
             return Math.Cbrt((3 * massa) / (4 * Math.PI * densidade));
         }
 
-        public Corpo(string nome, double massa, double densidade, double posX, double posY)
+        public Corpo(string nome, double massa, double densidade)
         {
             this.nome = nome;
             this.massa = massa;
             this.densidade = densidade;
-            this.posX = posX;
-            this.posY = posY;
+            this.posX = 0;
+            this.posY = 0;
             this.velX = 0;
             this.velY = 0;
         }
