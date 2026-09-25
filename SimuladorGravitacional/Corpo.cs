@@ -28,5 +28,10 @@ namespace SimuladorGravitacional
             this.velX = 0;
             this.velY = 0;
         }
+        public bool Colisao(Corpo outroCorpo)
+        {
+            double distancia = Math.Sqrt(Math.Pow(outroCorpo.posX - this.posX, 2) + Math.Pow(outroCorpo.posY - this.posY, 2));
+            return distancia <= (this.Raio() + outroCorpo.Raio());
+        }
     }
 }

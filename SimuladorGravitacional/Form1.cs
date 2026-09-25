@@ -8,7 +8,11 @@ namespace SimuladorGravitacional
         public Form1()
         {
             InitializeComponent();
-
+            typeof(Panel)
+        .GetProperty("DoubleBuffered",
+            System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic)
+        ?.SetValue(panel1, true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -45,6 +49,7 @@ namespace SimuladorGravitacional
         {
             foreach (Corpo corpo in universo.corpos)
             {
+                if (corpo == null) continue;
                 e.Graphics.FillEllipse(Brushes.White,
                     (float)corpo.posX - (float)corpo.Raio(),
                     (float)corpo.posY - (float)corpo.Raio(),
@@ -65,8 +70,8 @@ namespace SimuladorGravitacional
             panel1.Invalidate();
             for (int i = 0; i < numericUpDown6.Value; i++)
             {
-                universo.Update(0.01);
-                await Task.Delay(10);
+                universo.Update(1);
+                await Task.Delay(1);
                 panel1.Invalidate();
             }
         }

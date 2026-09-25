@@ -6,12 +6,14 @@ namespace SimuladorGravitacional
 {
     class Universo
     {
+        public double Escala { get; set; }
         public Corpo[] corpos { get; set; }
 
         public Universo(int qtdCorpos, int height, int width, double minMassa, double maxMassa, double minDensidade, double maxDensidade)
         {
             corpos = new Corpo[qtdCorpos];
-            for(int i = 0; i < qtdCorpos; i++)
+            Escala = 0.01;
+            for (int i = 0; i < qtdCorpos; i++)
             {
                 Corpo novoCorpo = new Corpo(GerarNome(), GerarNumero(minMassa, maxMassa), GerarNumero(minDensidade, maxDensidade));
                 GerarPosicao(novoCorpo, width, height);
@@ -60,18 +62,48 @@ namespace SimuladorGravitacional
             //Aqui está ocorrendo a atualização ou mudança dos Frames da execução!
             for (int i = 0; i < corpos.Length; i++)
             {
+                if (corpos[i] == null) continue;
                 double forcaX = 0;
                 double forcaY = 0;
-                for (int j = 0; j < corpos.Length; j++)
+                for (int j = i+1; j < corpos.Length; j++)
                 {
+                    if (i == j || corpos[j] == null) continue;
                     if (i != j)
                     {
-                        double distancia = Math.Sqrt(Math.Pow(corpos[j].posX - corpos[i].posX, 2) + Math.Pow(corpos[j].posY - corpos[i].posY, 2));
+                        double dx = (corpos[j].posX - corpos[i].posX) * Escala;
+                        double dy = (corpos[j].posY - corpos[i].posY) * Escala;
+                        double distancia = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
                         double forca = CalcularForcaGravitacional(corpos[i], corpos[j], distancia);
-                        forcaX += forca * (corpos[j].posX - corpos[i].posX) / distancia;
-                        forcaY += forca * (corpos[j].posY - corpos[i].posY) / distancia;
+                        forcaX += forca * dx / distancia;
+                        forcaY += forca * dy / distancia;
+                        if (corpos[i].Colisao(corpos[j]))
+                        {
+                            double massaTotal = corpos[i].massa + corpos[j].massa;
+                            double densidadeMedia = (corpos[i].densidade + corpos[j].densidade) / 2;
+                            double velXFinal = (corpos[i].massa * corpos[i].velX + corpos[j].massa * corpos[j].velX) / massaTotal;
+                            double velYFinal = (corpos[i].massa * corpos[i].velY + corpos[j].massa * corpos[j].velY) / massaTotal;
+                            if (corpos[i].massa >= corpos[j].massa)
+                            {
+                                corpos[i].massa = massaTotal;
+                                corpos[i].densidade = densidadeMedia;
+                                corpos[i].velX = velXFinal;
+                                corpos[i].velY = velYFinal;
+                                corpos[j] = null;
+                            }
+                            else
+                            {
+                                corpos[j].massa = massaTotal;
+                                corpos[j].densidade = densidadeMedia;
+                                corpos[j].velX = velXFinal;
+                                corpos[j].velY = velYFinal;
+                                corpos[i] = null;
+                                break;
+                            }
+                            continue;
+                        }
                     }
                 }
+                if (corpos[i] == null) continue;
                 double aceleracaoX = forcaX / corpos[i].massa;
                 double aceleracaoY = forcaY / corpos[i].massa;
                 corpos[i].velX += aceleracaoX * deltaTime;
@@ -80,9 +112,10 @@ namespace SimuladorGravitacional
 
             for (int l = 0; l < corpos.Length; l++)
             {
+                if (corpos[l] == null) continue;
                 // Atualiza a posição do corpo com base na velocidade
-                corpos[l].posX += corpos[l].velX * deltaTime;
-                corpos[l].posY += corpos[l].velY * deltaTime;
+                corpos[l].posX += (corpos[l].velX * deltaTime) / Escala;
+                corpos[l].posY += (corpos[l].velY * deltaTime) / Escala;
             }
         }
     }
