@@ -50,7 +50,8 @@ namespace SimuladorGravitacional
         public double CalcularForcaGravitacional(Corpo corpo1, Corpo corpo2, double distancia)
         {
             //Aqui está sendo calculado a gravidade entre os corpos!!
-            double forca = 1e6;
+            double gravidade = 6.674184 * Math.Pow(10, -11);
+            double forca = (gravidade * (corpo1.massa * corpo2.massa) / Math.Pow(distancia, 2));
             return forca;
         }
 
