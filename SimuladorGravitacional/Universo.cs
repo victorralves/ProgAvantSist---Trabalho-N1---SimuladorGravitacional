@@ -50,11 +50,11 @@ namespace SimuladorGravitacional
         public double CalcularForcaGravitacional(Corpo corpo1, Corpo corpo2, double distancia)
         {
             //Aqui está sendo calculado a gravidade entre os corpos!!
-            double forca = (6.67430e-11 * corpo1.massa * corpo2.massa) / Math.Pow(distancia, 2);
+            double forca = 1e6;
             return forca;
         }
 
-        public void Update()
+        public void Update(double deltaTime)
         {
             //Aqui está ocorrendo a atualização ou mudança dos Frames da execução!
             for (int i = 0; i < corpos.Length; i++)
@@ -73,15 +73,15 @@ namespace SimuladorGravitacional
                 }
                 double aceleracaoX = forcaX / corpos[i].massa;
                 double aceleracaoY = forcaY / corpos[i].massa;
-                corpos[i].velX += aceleracaoX;
-                corpos[i].velY += aceleracaoY;
+                corpos[i].velX += aceleracaoX * deltaTime;
+                corpos[i].velY += aceleracaoY * deltaTime;
             }
 
             for (int l = 0; l < corpos.Length; l++)
             {
                 // Atualiza a posição do corpo com base na velocidade
-                corpos[l].posX += corpos[l].velX;
-                corpos[l].posY += corpos[l].velY;
+                corpos[l].posX += corpos[l].velX * deltaTime;
+                corpos[l].posY += corpos[l].velY * deltaTime;
             }
         }
     }

@@ -59,10 +59,16 @@ namespace SimuladorGravitacional
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private async void button1_Click_1(object sender, EventArgs e)
         {
             universo = new Universo((int)numericUpDown5.Value, panel1.Height, panel1.Width, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value, (double)numericUpDown4.Value);
             panel1.Invalidate();
+            for (int i = 0; i < numericUpDown6.Value; i++)
+            {
+                universo.Update(0.01);
+                await Task.Delay(10);
+                panel1.Invalidate();
+            }
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -88,13 +94,40 @@ namespace SimuladorGravitacional
                 numericUpDown4.Value = numericUpDown3.Value + (decimal)0.01;
             }
         }
-        
+
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDown4.Value <= numericUpDown3.Value)
             {
                 numericUpDown3.Value = numericUpDown4.Value - (decimal)0.01;
             }
+        }
+
+        private void tableLayoutPanel1_Resize(object sender, EventArgs e)
+        {
+            double proporcao = 16.0 / 9.0;
+
+            int larguraDisponivel = tableLayoutPanel1.ClientSize.Width;
+            int alturaDisponivel = tableLayoutPanel1.GetRowHeights()[tableLayoutPanel1.GetRow(panel1)];
+
+            int largura;
+            int altura;
+
+            // A largura é o limite
+            altura = (int)(larguraDisponivel / proporcao);
+
+            if (altura <= alturaDisponivel)
+            {
+                largura = larguraDisponivel;
+            }
+            // A altura é o limite
+            else
+            {
+                altura = alturaDisponivel;
+                largura = (int)(altura * proporcao);
+            }
+            panel1.Width = largura;
+            panel1.Height = altura;
         }
     }
 }
