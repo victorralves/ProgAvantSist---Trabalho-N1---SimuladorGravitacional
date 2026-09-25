@@ -147,23 +147,23 @@
             // numericUpDown1
             // 
             numericUpDown1.Location = new Point(79, 3);
-            numericUpDown1.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
-            numericUpDown1.Minimum = new decimal(new int[] { 200, 0, 0, 0 });
+            numericUpDown1.Maximum = new decimal(new int[] { 49999, 0, 0, 0 });
+            numericUpDown1.Minimum = new decimal(new int[] { 500, 0, 0, 0 });
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(74, 23);
             numericUpDown1.TabIndex = 9;
-            numericUpDown1.Value = new decimal(new int[] { 500, 0, 0, 0 });
+            numericUpDown1.Value = new decimal(new int[] { 800, 0, 0, 0 });
             numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
             // 
             // numericUpDown2
             // 
             numericUpDown2.Location = new Point(159, 3);
-            numericUpDown2.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown2.Maximum = new decimal(new int[] { 50000, 0, 0, 0 });
             numericUpDown2.Minimum = new decimal(new int[] { 501, 0, 0, 0 });
             numericUpDown2.Name = "numericUpDown2";
             numericUpDown2.Size = new Size(74, 23);
             numericUpDown2.TabIndex = 10;
-            numericUpDown2.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDown2.Value = new decimal(new int[] { 5000, 0, 0, 0 });
             numericUpDown2.ValueChanged += numericUpDown2_ValueChanged;
             // 
             // flowLayoutPanel2
@@ -194,7 +194,7 @@
             numericUpDown3.Name = "numericUpDown3";
             numericUpDown3.Size = new Size(74, 23);
             numericUpDown3.TabIndex = 11;
-            numericUpDown3.Value = new decimal(new int[] { 9, 0, 0, 131072 });
+            numericUpDown3.Value = new decimal(new int[] { 539, 0, 0, 131072 });
             numericUpDown3.ValueChanged += numericUpDown3_ValueChanged;
             // 
             // numericUpDown4
@@ -206,7 +206,7 @@
             numericUpDown4.Name = "numericUpDown4";
             numericUpDown4.Size = new Size(74, 23);
             numericUpDown4.TabIndex = 12;
-            numericUpDown4.Value = new decimal(new int[] { 2260, 0, 0, 131072 });
+            numericUpDown4.Value = new decimal(new int[] { 226, 0, 0, 65536 });
             numericUpDown4.ValueChanged += numericUpDown4_ValueChanged;
             // 
             // flowLayoutPanel5
@@ -238,6 +238,7 @@
             numericUpDown5.Name = "numericUpDown5";
             numericUpDown5.Size = new Size(89, 23);
             numericUpDown5.TabIndex = 1;
+            numericUpDown5.Value = new decimal(new int[] { 50, 0, 0, 0 });
             numericUpDown5.ValueChanged += numericUpDown5_ValueChanged;
             // 
             // label2
@@ -257,7 +258,7 @@
             numericUpDown6.Name = "numericUpDown6";
             numericUpDown6.Size = new Size(80, 23);
             numericUpDown6.TabIndex = 3;
-            numericUpDown6.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown6.Value = new decimal(new int[] { 1000, 0, 0, 0 });
             // 
             // tableLayoutPanel1
             // 
