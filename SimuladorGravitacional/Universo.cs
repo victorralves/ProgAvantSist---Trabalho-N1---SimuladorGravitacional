@@ -26,10 +26,11 @@ namespace SimuladorGravitacional
         {
             Random random = new Random();
             string nome = "";
+            string caminho = "NomeCorpos.txt";
 
-            if (File.Exists("NomeCorpos.txt"))
+            if (File.Exists(caminho))
             {
-                string[] nomes = File.ReadAllLines("NomeCorpos.txt");
+                string[] nomes = File.ReadAllLines(caminho);
                 nome = nomes[random.Next(nomes.Length)];
             }
 

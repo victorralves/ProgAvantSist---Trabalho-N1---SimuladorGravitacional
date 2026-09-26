@@ -5,6 +5,8 @@ namespace SimuladorGravitacional
     public partial class Form1 : Form
     {
         Universo universo = new Universo(0, 0, 0, 0, 0, 0, 0);
+        GravacaoFilha gravacao = new GravacaoFilha();
+
         public Form1()
         {
             InitializeComponent();
@@ -20,27 +22,8 @@ namespace SimuladorGravitacional
 
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void domainUpDown1_SelectedItemChanged(object sender, EventArgs e)
         {
 
         }
@@ -67,8 +50,10 @@ namespace SimuladorGravitacional
         private async void button1_Click_1(object sender, EventArgs e)
         {
             universo = new Universo((int)numericUpDown5.Value, panel1.Height, panel1.Width, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value, (double)numericUpDown4.Value);
+            int numIteracoes = (int)numericUpDown6.Value;
+            gravacao.Gravar(universo, numIteracoes);
             panel1.Invalidate();
-            for (int i = 0; i < numericUpDown6.Value; i++)
+            for (int i = 0; i < numIteracoes; i++)
             {
                 universo.Update(1);
                 await Task.Delay(1);
