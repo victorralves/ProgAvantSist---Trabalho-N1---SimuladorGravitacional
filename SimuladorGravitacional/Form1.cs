@@ -19,13 +19,35 @@ namespace SimuladorGravitacional
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Arquivos de texto (*.txt)|*.txt|Todos os arquivos (*.*)|*.*";
+                openFileDialog.Title = "Selecione o arquivo de nomes dos corpos";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string caminhoArquivo = openFileDialog.FileName;
+                    universo = gravacao.CarregarGravacao(caminhoArquivo);
+                    panel1.Invalidate();
+                    for (int i = 0; i < universo.QuantidadeIteracoes; i++)
+                    {
+                        universo.Update(1);
+                        await Task.Delay(1);
+                        panel1.Invalidate();
+                    }
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
 
+            MessageBox.Show("Simulação concluída!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void panel1_Paint_1(object sender, PaintEventArgs e)
@@ -33,13 +55,22 @@ namespace SimuladorGravitacional
             foreach (Corpo corpo in universo.corpos)
             {
                 if (corpo == null) continue;
-                e.Graphics.FillEllipse(Brushes.White,
-                    (float)corpo.posX - (float)corpo.Raio(),
-                    (float)corpo.posY - (float)corpo.Raio(),
-                    (float)corpo.Raio() * 2,
-                    (float)corpo.Raio() * 2);
-            }
 
+                double raio = corpo.Raio();
+
+                if (double.IsNaN(corpo.posX) || double.IsInfinity(corpo.posX) ||
+                    double.IsNaN(corpo.posY) || double.IsInfinity(corpo.posY) ||
+                    double.IsNaN(raio) || double.IsInfinity(raio) || raio <= 0)
+                {
+                    continue;
+                }
+
+                e.Graphics.FillEllipse(Brushes.White,
+                    (float)(corpo.posX - raio),
+                    (float)(corpo.posY - raio),
+                    (float)(raio * 2),
+                    (float)(raio * 2));
+            }
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
@@ -59,6 +90,8 @@ namespace SimuladorGravitacional
                 await Task.Delay(1);
                 panel1.Invalidate();
             }
+
+            MessageBox.Show("Simulação concluída!\nVocê pode visualizar a gravação ou até carregar ela novamente!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)

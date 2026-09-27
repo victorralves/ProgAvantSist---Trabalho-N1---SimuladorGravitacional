@@ -13,6 +13,9 @@ namespace SimuladorGravitacional
         public double posY { get; set; }
         public double velX { get; set; }
         public double velY { get; set; }
+        public System.Drawing.PointF Posicao { get; set; }
+        public System.Drawing.PointF Velocidade { get; set; }
+
         public double Raio()
         {
             return Math.Cbrt((3 * massa) / (4 * Math.PI * densidade));
