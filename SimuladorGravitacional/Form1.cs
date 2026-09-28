@@ -6,6 +6,7 @@ namespace SimuladorGravitacional
     {
         Universo universo = new Universo(0, 0, 0, 0, 0, 0, 0);
         GravacaoFilha gravacao = new GravacaoFilha();
+        
 
         public Form1()
         {
@@ -36,6 +37,8 @@ namespace SimuladorGravitacional
                     panel1.Invalidate();
                     for (int i = 0; i < universo.QuantidadeIteracoes; i++)
                     {
+                        universo.Largura = panel1.Width;
+                        universo.Altura = panel1.Height;
                         universo.Update(1);
                         await Task.Delay(1);
                         panel1.Invalidate();
@@ -52,6 +55,8 @@ namespace SimuladorGravitacional
 
         private void panel1_Paint_1(object sender, PaintEventArgs e)
         {
+            universo.Largura = panel1.Width;
+            universo.Altura = panel1.Height;
             foreach (Corpo corpo in universo.corpos)
             {
                 if (corpo == null) continue;
@@ -63,6 +68,28 @@ namespace SimuladorGravitacional
                     double.IsNaN(raio) || double.IsInfinity(raio) || raio <= 0)
                 {
                     continue;
+                }
+
+                if(corpo.posX < raio)
+                {
+                    corpo.posX = raio;
+                    corpo.velX = -corpo.velX;
+                }
+                else if (corpo.posX > panel1.Width - raio)
+                {
+                    corpo.posX = panel1.Width - raio;
+                    corpo.velX = -corpo.velX;
+                }
+
+                if(corpo.posY < raio)
+                {
+                    corpo.posY = raio;
+                    corpo.velY = -corpo.velY;
+                }
+                else if (corpo.posY > panel1.Height - raio)
+                {
+                    corpo.posY = panel1.Height - raio;
+                    corpo.velY = -corpo.velY;
                 }
 
                 e.Graphics.FillEllipse(Brushes.White,
@@ -86,6 +113,8 @@ namespace SimuladorGravitacional
             panel1.Invalidate();
             for (int i = 0; i < numIteracoes; i++)
             {
+                universo.Largura = panel1.Width;
+                universo.Altura = panel1.Height;
                 universo.Update(1);
                 await Task.Delay(1);
                 panel1.Invalidate();

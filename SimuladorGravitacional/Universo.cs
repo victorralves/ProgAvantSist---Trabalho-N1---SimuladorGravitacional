@@ -10,6 +10,9 @@ namespace SimuladorGravitacional
         public Corpo[] corpos { get; set; }
         public int QuantidadeIteracoes { get; set; }
 
+        public int Largura { get; set; }
+        public int Altura { get; set; }
+
         public Universo(int qtdCorpos, int height, int width, double minMassa, double maxMassa, double minDensidade, double maxDensidade)
         {
             corpos = new Corpo[qtdCorpos];
