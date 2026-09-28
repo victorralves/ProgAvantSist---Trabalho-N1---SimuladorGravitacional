@@ -31,7 +31,6 @@
             panel1 = new Panel();
             button1 = new Button();
             button2 = new Button();
-            button3 = new Button();
             Massa = new Label();
             Densidade = new Label();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -91,25 +90,14 @@
             // 
             // button2
             // 
-            button2.Location = new Point(0, 3);
+            button2.Location = new Point(0, 0);
             button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(207, 31);
+            button2.Size = new Size(207, 52);
             button2.TabIndex = 4;
             button2.Text = "Carregar uma configuração";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
-            // 
-            // button3
-            // 
-            button3.Location = new Point(0, 35);
-            button3.Margin = new Padding(3, 4, 3, 4);
-            button3.Name = "button3";
-            button3.Size = new Size(207, 31);
-            button3.TabIndex = 5;
-            button3.Text = "Salvar configuração atual";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button2_Click;
             // 
             // Massa
             // 
@@ -292,10 +280,10 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 307F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 225F));
-            tableLayoutPanel2.Controls.Add(button1, 0, 0);
             tableLayoutPanel2.Controls.Add(panel2, 3, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel8, 2, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel5, 1, 0);
+            tableLayoutPanel2.Controls.Add(button1, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 4);
             tableLayoutPanel2.Margin = new Padding(3, 4, 3, 4);
@@ -309,7 +297,6 @@
             // panel2
             // 
             panel2.Controls.Add(button2);
-            panel2.Controls.Add(button3);
             panel2.Location = new Point(736, 4);
             panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
@@ -361,7 +348,6 @@
         private Panel panel1;
         private Button button1;
         private Button button2;
-        private Button button3;
         private Label Massa;
         private Label Densidade;
         private FlowLayoutPanel flowLayoutPanel1;
