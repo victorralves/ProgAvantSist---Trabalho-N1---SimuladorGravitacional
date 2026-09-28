@@ -233,7 +233,6 @@
             numericUpDown5.Size = new Size(102, 27);
             numericUpDown5.TabIndex = 1;
             numericUpDown5.Value = new decimal(new int[] { 50, 0, 0, 0 });
-            numericUpDown5.ValueChanged += numericUpDown5_ValueChanged;
             // 
             // label2
             // 
@@ -321,7 +320,6 @@
             Controls.Add(tableLayoutPanel1);
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel3.ResumeLayout(false);
             flowLayoutPanel3.PerformLayout();

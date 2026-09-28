@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SimuladorGravitacional
 {
-    class GravacaoFilha : Gravacao
+    class GravacaoFilha : Gravacao //ESCOLHEMOS O NOME COMO GRAVAÇÂO FILHA PARA NÃO FUGIR MUITO DO DESEJADO INICIALMENTE!
     {
         public override void Gravar(Universo universo, int numIteracoes)
         {
@@ -15,19 +15,21 @@ namespace SimuladorGravitacional
             //ESSE CAMINHO DE PASTA SÓ VAI SERVIR PARA O MEU COMPUTADOR, VOCÊ QUE FEZ O DOWNLOAD DO PROJETO,
             //A PASTA DE GRAVAÇÃO VAI ESTAR DENTRO DO DIRETÓRIO DE DEBUG!
 
-            string nomeArquivo = Path.Combine(caminhoPasta, $"simulacao_{contador}.txt");
+            string nomeArquivo = Path.Combine(caminhoPasta, $"simulacao_{contador}.txt"); //NOMEIAÇÃO DO ARQUIVO DE GRAVAÇÃO!
 
-            if(!System.IO.Directory.Exists(caminhoPasta))
+            if(!System.IO.Directory.Exists(caminhoPasta)) //SE A PASTA NÃO EXISTIR, ELE VAI CRIAR A PASTA NO CAMINHO DA PASTA DO DEBUG!
             {
                 System.IO.Directory.CreateDirectory(caminhoPasta);
             }
 
-            while (File.Exists(nomeArquivo))
+            while (File.Exists(nomeArquivo)) //SE EXISTIR UM ARQUIVO COM O NÚMERO DO CONTADOR, ELE VAI INCREMENTAR O CONTADOR ATÉ ENCONTRAR UM NOME DE ARQUIVO DISPONÍVEL!
             {
                 contador++;
                 nomeArquivo = Path.Combine(caminhoPasta, $"simulacao_{contador}.txt");
             }
 
+            //FORMALIZAÇÃO DO ARQUIVO DE GRAVAÇÃO, COM O CABEÇALHO E OS DADOS DE CADA CORPO!
+            //DE ACORDO COM O QUE FOI PEDIDO NO TRABALHO!
             File.WriteAllText(nomeArquivo, "Dados da nova simulação.\r\n");
 
             string cabecalho = $"Quant. Corpo: {universo.corpos.Length}; Quant. Iterações: {numIteracoes}; TempoEntreIterações: 1 \r\n";
@@ -43,17 +45,17 @@ namespace SimuladorGravitacional
             }
         }
 
-        public Universo CarregarGravacao(string caminhoArquivo)
+        public Universo CarregarGravacao(string caminhoArquivo) //FUNÇÃO PARA CARREGAR A SIMULAÇÃO GRAVADA!
         {
-            if (!File.Exists(caminhoArquivo))
+            if (!File.Exists(caminhoArquivo)) //VERIFICA SE O ARQUIVO EXISTE
             {
                 throw new FileNotFoundException($"O arquivo {caminhoArquivo} não foi encontrado.");
             }
 
-            string[] linhas = File.ReadAllLines(caminhoArquivo);
+            string[] linhas = File.ReadAllLines(caminhoArquivo); //LEITURA DAS LINHAS DO ARQUIVO!
 
             string linhaCabecalho = "";
-            foreach (string l in linhas)
+            foreach (string l in linhas) //PERCORRE E PROCURA O CABEÇALHO PARA PEGAR AS INFORMAÇÔES NECESSARIAS!
             {
                 if (l.Contains("Quant. Corpo"))
                 {
@@ -68,24 +70,24 @@ namespace SimuladorGravitacional
             }
 
             string[] cabecalho = linhaCabecalho.Split(';');
-            int qtdCorpos = int.Parse(cabecalho[0].Split(':')[1].Trim());
-            int qtdIteracoes = int.Parse(cabecalho[1].Split(':')[1].Trim());
+            int qtdCorpos = int.Parse(cabecalho[0].Split(':')[1].Trim()); //PEGA AS INFORMAÇÕES DE QUANTIDADE NO CABEÇALHO!
+            int qtdIteracoes = int.Parse(cabecalho[1].Split(':')[1].Trim()); //PEGA AS INFORMAÇÕES DE ITERAÇÕES NO CABEÇALHO!
 
             Universo universoCarregado = new Universo(qtdCorpos);
-            universoCarregado.QuantidadeIteracoes = qtdIteracoes;
+            universoCarregado.QuantidadeIteracoes = qtdIteracoes; //PASSA A INFORMAÇÃO DE ITERAÇÕES PARA O UNIVERSO CARREGADO!
 
             int indiceCorpo = 0;
 
-            foreach (string linha in linhas)
+            foreach (string linha in linhas) //AQUI COMEÇA A PERCORRER AS LINHAS DO ARQUIVO PARA PEGAR OS DADOS DE CADA CORPO!
             {
                 if (!linha.StartsWith("Corpo")) continue;
                 if (indiceCorpo >= qtdCorpos) break;
 
                 try
                 {
-                    string[] blocos = linha.Split(';');
+                    string[] blocos = linha.Split(';'); //EM CADA LINHA É CONSIDERADO OS BLOCOS DE ACORDO COM AS INFORMAÇÕES NECESSÀRIAS E PEDIDAS NO TRABALHO!
 
-                    if (blocos.Length >= 5)
+                    if (blocos.Length >= 5) //NO TOTAL SÃO 5 BLOCOS (NOME, MASSA, DENSIDADE, POSIÇÃO, VELOCIDADE), SE TIVER MENOS, NÃO VAI PROCESSAR A LINHA!
                     {
                         string blocoNome = blocos[0].Substring(blocos[0].IndexOf('<'));
                         string nomeLimpo = blocoNome.Split(':')[1].Replace(">", "").Trim();
@@ -106,16 +108,16 @@ namespace SimuladorGravitacional
                         float velX = float.Parse(velCoordenadas[0].Trim(), System.Globalization.CultureInfo.InvariantCulture);
                         float velY = float.Parse(velCoordenadas[1].Trim(), System.Globalization.CultureInfo.InvariantCulture);
 
-                        Corpo novoCorpo = new Corpo(nomeLimpo, massa, densidade);
+                        Corpo novoCorpo = new Corpo(nomeLimpo, massa, densidade); //PASSA AS INFORMAÇÕES PARA O CONSTRUTOR DA CLASSE CORPO!
 
-                        novoCorpo.posX = posX;
-                        novoCorpo.posY = posY;
+                        novoCorpo.posX = posX; //PASSA AS INFORMAÇÕES DE POSIÇÃO E VELOCIDADE PARA O CORPO!
+                        novoCorpo.posY = posY; //ISSO É SEPARADO POIS O CONSTRUTOR NAO RECEBE!
 
                         novoCorpo.velX = velX;
                         novoCorpo.velY = velY;
 
-                        novoCorpo.Posicao = new System.Drawing.PointF((float)posX, (float)posY);
-                        novoCorpo.Velocidade = new System.Drawing.PointF((float)velX, (float)velY);
+                        novoCorpo.Posicao = new System.Drawing.PointF((float)posX, (float)posY); //AQUI FOI NECESSÁRIO CRIAR UM NOVO PONTO PARA A POSIÇÃO E VELOCIDADE!
+                        novoCorpo.Velocidade = new System.Drawing.PointF((float)velX, (float)velY); //JUSTAMENTE POIS O CONSTRUTOR NÃO RECEBE ESSES VALORES!
 
                         universoCarregado.corpos[indiceCorpo] = novoCorpo;
                         indiceCorpo++;

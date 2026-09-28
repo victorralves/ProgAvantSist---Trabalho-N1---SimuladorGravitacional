@@ -2,6 +2,8 @@ using System.ComponentModel;
 
 namespace SimuladorGravitacional
 {
+    //AQUI … A CLASSE PRINCIPAL DO FORMUL¡RIO, ONDE A SIMULA«√O … CONTROLADA E EXIBIDA.
+
     public partial class Form1 : Form
     {
         Universo universo = new Universo(0, 0, 0, 0, 0, 0, 0);
@@ -11,34 +13,27 @@ namespace SimuladorGravitacional
         public Form1()
         {
             InitializeComponent();
-            typeof(Panel)
+            typeof(Panel) // ESSA PARTE FOI IMPLEMENTADA PARA REDUZIR AS PISCADAS NA TELA DURANTE A SIMULAÁ√O!
         .GetProperty("DoubleBuffered",
             System.Reflection.BindingFlags.Instance |
             System.Reflection.BindingFlags.NonPublic)
         ?.SetValue(panel1, true);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            
-        }
-
-
-        private async void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e) // FUNÁ√O PARA CARREGAR UMA SIMULA«√O GRAVADA!
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "Arquivos de texto (*.txt)|*.txt|Todos os arquivos (*.*)|*.*";
                 openFileDialog.Title = "Selecione o arquivo de nomes dos corpos";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                if (openFileDialog.ShowDialog() == DialogResult.OK) // A PESSOA SELECIONA UM ARQUIVO NO PC E NO FORMATO CERTO!
                 {
                     string caminhoArquivo = openFileDialog.FileName;
-                    universo = gravacao.CarregarGravacao(caminhoArquivo);
+                    universo = gravacao.CarregarGravacao(caminhoArquivo); //AP”S SELECIONADO O ARQUIVO … DESTRINCHADO L¡ NA CLASSE DE GRAVA«√O!
                     panel1.Invalidate();
                     for (int i = 0; i < universo.QuantidadeIteracoes; i++)
                     {
-                        universo.Largura = panel1.Width;
-                        universo.Altura = panel1.Height;
+                        //COM OS DADOS CARREGADOS, A SIMULA«√O … RECRIADA E EXIBIDA NA TELA!
                         universo.Update(1);
                         await Task.Delay(1);
                         panel1.Invalidate();
@@ -53,11 +48,11 @@ namespace SimuladorGravitacional
             MessageBox.Show("SimulaÁ„o concluÌda!", "Conclus„o", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void panel1_Paint_1(object sender, PaintEventArgs e)
+        private void panel1_Paint_1(object sender, PaintEventArgs e) // FUNÁ√O PARA DESENHAR OS CORPOS NA TELA!
         {
             universo.Largura = panel1.Width;
             universo.Altura = panel1.Height;
-            foreach (Corpo corpo in universo.corpos)
+            foreach (Corpo corpo in universo.corpos) //TODA VEZ QUE FOR CRIADO E ATUALIZADO UM CORPO, ELE … DESENAHDO E MOLDADO AQUI!
             {
                 if (corpo == null) continue;
 
@@ -70,7 +65,8 @@ namespace SimuladorGravitacional
                     continue;
                 }
 
-                if(corpo.posX < raio)
+                //ESSES IFs ABAIXO S√O PARA IMPEDIR QUE OS CORPOS SAIAM DA TELA, ELES "BATEM" NAS PAREDES E VOLTAM!
+                if (corpo.posX < raio)
                 {
                     corpo.posX = raio;
                     corpo.velX = -corpo.velX;
@@ -92,6 +88,7 @@ namespace SimuladorGravitacional
                     corpo.velY = -corpo.velY;
                 }
 
+                //AQUI EST¿ CONTIDO OS PADRıES DE DESENHO!
                 e.Graphics.FillEllipse(Brushes.White,
                     (float)(corpo.posX - raio),
                     (float)(corpo.posY - raio),
@@ -100,21 +97,17 @@ namespace SimuladorGravitacional
             }
         }
 
-        private void numericUpDown5_ValueChanged(object sender, EventArgs e)
+        private async void button1_Click_1(object sender, EventArgs e) //FUN«¬O PARA INICIAR A SIMULA«√O!
         {
-
-        }
-
-        private async void button1_Click_1(object sender, EventArgs e)
-        {
+            //S√O INSTANCIADOS OS DADOS DESEJADOS E GRAVADO OS DADOS INICIAIS!
             universo = new Universo((int)numericUpDown5.Value, panel1.Height, panel1.Width, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value, (double)numericUpDown4.Value);
             int numIteracoes = (int)numericUpDown6.Value;
             gravacao.Gravar(universo, numIteracoes);
             panel1.Invalidate();
+
+            //AQUI S√O FEITAS AS ITERA«’ES!
             for (int i = 0; i < numIteracoes; i++)
             {
-                universo.Largura = panel1.Width;
-                universo.Altura = panel1.Height;
                 universo.Update(1);
                 await Task.Delay(1);
                 panel1.Invalidate();
@@ -123,6 +116,7 @@ namespace SimuladorGravitacional
             MessageBox.Show("SimulaÁ„o concluÌda!\nVocÍ pode visualizar a gravaÁ„o ou atÈ carregar ela novamente!", "Conclus„o", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        //DESSE NUMERICUPDOWN AT… O 4 S¬O CONFIGURA«’ES DE LIMITES PARA AS SIMULA«’ES!
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDown1.Value >= numericUpDown2.Value)
@@ -155,6 +149,7 @@ namespace SimuladorGravitacional
             }
         }
 
+        //AQUI FOI TRABALHADO A PRPORÁ¬O DO FORM1!!
         private void tableLayoutPanel1_Resize(object sender, EventArgs e)
         {
             double proporcao = 16.0 / 9.0;
