@@ -11,8 +11,7 @@ namespace SimuladorGravitacional
         public override void Gravar(Universo universo, int numIteracoes)
         {
             int contador = 1;
-            string caminhoPasta = "C:\\Users\\victo\\source\\repos\\ProgramacaoAvancadaDeSistemas\\TrabalhoN1 - SimuladorGravitacional\\SimuladorGravitacional\\SimuladorGravitacional\\ArquivosGravacao\\";
-            //ESSE CAMINHO DE PASTA SÓ VAI SERVIR PARA O MEU COMPUTADOR, VOCÊ QUE FEZ O DOWNLOAD DO PROJETO,
+            string caminhoPasta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ArquivosGravacao");
             //A PASTA DE GRAVAÇÃO VAI ESTAR DENTRO DO DIRETÓRIO DE DEBUG!
 
             string nomeArquivo = Path.Combine(caminhoPasta, $"simulacao_{contador}.txt"); //NOMEIAÇÃO DO ARQUIVO DE GRAVAÇÃO!
