@@ -31,15 +31,15 @@ namespace SimuladorGravitacional
             //DE ACORDO COM O QUE FOI PEDIDO NO TRABALHO!
             File.WriteAllText(nomeArquivo, "Dados da nova simulação.\r\n");
 
-            string cabecalho = $"Quant. Corpo: {universo.corpos.Length}; Quant. Iterações: {numIteracoes}; TempoEntreIterações: 1 \r\n";
+            string cabecalho = $"Quant. Corpo: {universo.Corpos.Length}; Quant. Iterações: {numIteracoes}; TempoEntreIterações: 1 \r\n";
             File.AppendAllText(nomeArquivo, cabecalho);
 
-            for (int i = 0; i < universo.corpos.Length; i++)
+            for (int i = 0; i < universo.Corpos.Length; i++)
             {
-                Corpo corpo = universo.corpos[i];
+                Corpo corpo = universo.Corpos[i];
                 string dadosCorpo = string.Format(CultureInfo.InvariantCulture,
                     "Corpo {0}: <Nome: {1}>; <Massa: {2}>; <Densidade: {3}>; <Posição: ({4}, {5})>; <Velocidade: ({6}, {7})>",
-                    i + 1, corpo.nome, corpo.massa, corpo.densidade, corpo.posX, corpo.posY, corpo.velX, corpo.velY);
+                    i + 1, corpo.Nome, corpo.Massa, corpo.Densidade, corpo.PosX, corpo.PosY, corpo.VelX, corpo.VelY);
                 File.AppendAllText(nomeArquivo, "\r\n" + dadosCorpo);
             }
         }
@@ -109,16 +109,16 @@ namespace SimuladorGravitacional
 
                         Corpo novoCorpo = new Corpo(nomeLimpo, massa, densidade); //PASSA AS INFORMAÇÕES PARA O CONSTRUTOR DA CLASSE CORPO!
 
-                        novoCorpo.posX = posX; //PASSA AS INFORMAÇÕES DE POSIÇÃO E VELOCIDADE PARA O CORPO!
-                        novoCorpo.posY = posY; //ISSO É SEPARADO POIS O CONSTRUTOR NAO RECEBE!
+                        novoCorpo.PosX = posX; //PASSA AS INFORMAÇÕES DE POSIÇÃO E VELOCIDADE PARA O CORPO!
+                        novoCorpo.PosY = posY; //ISSO É SEPARADO POIS O CONSTRUTOR NAO RECEBE!
 
-                        novoCorpo.velX = velX;
-                        novoCorpo.velY = velY;
+                        novoCorpo.VelX = velX;
+                        novoCorpo.VelY = velY;
 
                         novoCorpo.Posicao = new System.Drawing.PointF((float)posX, (float)posY); //AQUI FOI NECESSÁRIO CRIAR UM NOVO PONTO PARA A POSIÇÃO E VELOCIDADE!
                         novoCorpo.Velocidade = new System.Drawing.PointF((float)velX, (float)velY); //JUSTAMENTE POIS O CONSTRUTOR NÃO RECEBE ESSES VALORES!
 
-                        universoCarregado.corpos[indiceCorpo] = novoCorpo;
+                        universoCarregado.Corpos[indiceCorpo] = novoCorpo;
                         indiceCorpo++;
                     }
                 }

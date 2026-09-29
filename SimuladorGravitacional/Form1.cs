@@ -52,46 +52,46 @@ namespace SimuladorGravitacional
         {
             universo.Largura = panel1.Width;
             universo.Altura = panel1.Height;
-            foreach (Corpo corpo in universo.corpos) //TODA VEZ QUE FOR CRIADO E ATUALIZADO UM CORPO, ELE É DESENAHDO E MOLDADO AQUI!
+            foreach (Corpo corpo in universo.Corpos) //TODA VEZ QUE FOR CRIADO E ATUALIZADO UM CORPO, ELE É DESENAHDO E MOLDADO AQUI!
             {
                 if (corpo == null) continue;
 
                 double raio = corpo.Raio();
 
-                if (double.IsNaN(corpo.posX) || double.IsInfinity(corpo.posX) ||
-                    double.IsNaN(corpo.posY) || double.IsInfinity(corpo.posY) ||
+                if (double.IsNaN(corpo.PosX) || double.IsInfinity(corpo.PosX) ||
+                    double.IsNaN(corpo.PosY) || double.IsInfinity(corpo.PosY) ||
                     double.IsNaN(raio) || double.IsInfinity(raio) || raio <= 0)
                 {
                     continue;
                 }
 
                 //ESSES IFs ABAIXO SÃO PARA IMPEDIR QUE OS CORPOS SAIAM DA TELA, ELES "BATEM" NAS PAREDES E VOLTAM!
-                if (corpo.posX < raio)
+                if (corpo.PosX < raio)
                 {
-                    corpo.posX = raio;
-                    corpo.velX = -corpo.velX;
+                    corpo.PosX = raio;
+                    corpo.VelX = -corpo.VelX;
                 }
-                else if (corpo.posX > panel1.Width - raio)
+                else if (corpo.PosX > panel1.Width - raio)
                 {
-                    corpo.posX = panel1.Width - raio;
-                    corpo.velX = -corpo.velX;
+                    corpo.PosX = panel1.Width - raio;
+                    corpo.VelX = -corpo.VelX;
                 }
 
-                if(corpo.posY < raio)
+                if(corpo.PosY < raio)
                 {
-                    corpo.posY = raio;
-                    corpo.velY = -corpo.velY;
+                    corpo.PosY = raio;
+                    corpo.VelY = -corpo.VelY;
                 }
-                else if (corpo.posY > panel1.Height - raio)
+                else if (corpo.PosY > panel1.Height - raio)
                 {
-                    corpo.posY = panel1.Height - raio;
-                    corpo.velY = -corpo.velY;
+                    corpo.PosY = panel1.Height - raio;
+                    corpo.VelY = -corpo.VelY;
                 }
 
                 //AQUI ESTÀ CONTIDO OS PADRõES DE DESENHO!
                 e.Graphics.FillEllipse(Brushes.White,
-                    (float)(corpo.posX - raio),
-                    (float)(corpo.posY - raio),
+                    (float)(corpo.PosX - raio),
+                    (float)(corpo.PosY - raio),
                     (float)(raio * 2),
                     (float)(raio * 2));
             }

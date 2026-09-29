@@ -9,11 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="NewFile1.txt" />
+    <Compile Remove="ArquivosGravacao\**" />
+    <EmbeddedResource Remove="ArquivosGravacao\**" />
+    <None Remove="ArquivosGravacao\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ArquivosGravacao\" />
+    <None Remove="NewFile1.txt" />
   </ItemGroup>
 
 </Project>
