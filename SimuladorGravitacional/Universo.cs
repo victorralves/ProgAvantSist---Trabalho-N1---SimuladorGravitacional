@@ -50,8 +50,10 @@ namespace SimuladorGravitacional
         public void GerarPosicao(Corpo corpo, int limiteX, int limiteY)//METODO PARA GERAR A POSIÇÃO DOS CORPOS NA TELA!
         {
             Random random = new Random();
-            corpo.PosX = random.Next(limiteX - (int)corpo.Raio()); //GERA UMA POSIÇÃO ALEATÓRIA PARA O CORPO!
-            corpo.PosY = random.Next(limiteY - (int)corpo.Raio());
+            int raio = (int)Math.Ceiling(corpo.Raio());
+            //GERA UMA POSIÇÃO ALEATÓRIA PARA O CORPO, ENTRE RAIO E LIMITE - RAIO, PARA ELE NASCER INTEIRO DENTRO DA TELA!
+            corpo.PosX = random.Next(raio, Math.Max(raio + 1, limiteX - raio));
+            corpo.PosY = random.Next(raio, Math.Max(raio + 1, limiteY - raio));
         }
 
         //JÀ ESSE METODO VAI GERAR OS NUMEROS ALEATÓRIOS PARA A MASSA E DENSIDADE DOS CORPOS DE ACORDO COM O SELECIONADO NOS LIMITES!

@@ -1,26 +1,28 @@
-using System.ComponentModel;
+Ôªøusing System.ComponentModel;
 
 namespace SimuladorGravitacional
 {
-    //AQUI … A CLASSE PRINCIPAL DO FORMUL¡RIO, ONDE A SIMULA«√O … CONTROLADA E EXIBIDA.
+    //AQUI √â A CLASSE PRINCIPAL DO FORMUL√ÅRIO, ONDE A SIMULA√á√ÉO √â CONTROLADA E EXIBIDA.
 
     public partial class Form1 : Form
     {
         Universo universo = new Universo(0, 0, 0, 0, 0, 0, 0);
         GravacaoFilha gravacao = new GravacaoFilha();
-        
+
+        //CONTROLA O ZOOM DA TELA: 1 = TAMANHO NORMAL, MENOR QUE 1 = ZOOM OUT!
+        double zoom = 1;
 
         public Form1()
         {
             InitializeComponent();
-            typeof(Panel) // ESSA PARTE FOI IMPLEMENTADA PARA REDUZIR AS PISCADAS NA TELA DURANTE A SIMULAÁ√O!
+            typeof(Panel) // ESSA PARTE FOI IMPLEMENTADA PARA REDUZIR AS PISCADAS NA TELA DURANTE A SIMULA√ß√ÉO!
         .GetProperty("DoubleBuffered",
             System.Reflection.BindingFlags.Instance |
             System.Reflection.BindingFlags.NonPublic)
         ?.SetValue(panel1, true);
         }
 
-        private async void button2_Click(object sender, EventArgs e) // FUNÁ√O PARA CARREGAR UMA SIMULA«√O GRAVADA!
+        private async void button2_Click(object sender, EventArgs e) // FUN√ß√ÉO PARA CARREGAR UMA SIMULA√á√ÉO GRAVADA!
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -29,11 +31,12 @@ namespace SimuladorGravitacional
                 if (openFileDialog.ShowDialog() == DialogResult.OK) // A PESSOA SELECIONA UM ARQUIVO NO PC E NO FORMATO CERTO!
                 {
                     string caminhoArquivo = openFileDialog.FileName;
-                    universo = gravacao.CarregarGravacao(caminhoArquivo); //AP”S SELECIONADO O ARQUIVO … DESTRINCHADO L¡ NA CLASSE DE GRAVA«√O!
+                    universo = gravacao.CarregarGravacao(caminhoArquivo); //AP√ìS SELECIONADO O ARQUIVO √â DESTRINCHADO L√Å NA CLASSE DE GRAVA√á√ÉO!
+                    zoom = 1;
                     panel1.Invalidate();
                     for (int i = 0; i < universo.QuantidadeIteracoes; i++)
                     {
-                        //COM OS DADOS CARREGADOS, A SIMULA«√O … RECRIADA E EXIBIDA NA TELA!
+                        //COM OS DADOS CARREGADOS, A SIMULA√á√ÉO √â RECRIADA E EXIBIDA NA TELA!
                         universo.Update(1);
                         await Task.Delay(1);
                         panel1.Invalidate();
@@ -45,14 +48,20 @@ namespace SimuladorGravitacional
                 }
             }
 
-            MessageBox.Show("SimulaÁ„o concluÌda!", "Conclus„o", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Simula√ß√£o conclu√≠da!", "Conclus√£o", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void panel1_Paint_1(object sender, PaintEventArgs e) // FUNÁ√O PARA DESENHAR OS CORPOS NA TELA!
+        private void panel1_Paint_1(object sender, PaintEventArgs e) // FUN√á√ÉO PARA DESENHAR OS CORPOS NA TELA!
         {
             universo.Largura = panel1.Width;
             universo.Altura = panel1.Height;
-            foreach (Corpo corpo in universo.Corpos) //TODA VEZ QUE FOR CRIADO E ATUALIZADO UM CORPO, ELE … DESENAHDO E MOLDADO AQUI!
+
+            //O ZOOM √â FEITO EM TORNO DO CENTRO DA TELA!
+            double centroX = panel1.Width / 2.0;
+            double centroY = panel1.Height / 2.0;
+            bool algumForaDaTela = false;
+
+            foreach (Corpo corpo in universo.Corpos) //TODA VEZ QUE FOR CRIADO E ATUALIZADO UM CORPO, ELE √â DESENHADO E MOLDADO AQUI!
             {
                 if (corpo == null) continue;
 
@@ -65,47 +74,36 @@ namespace SimuladorGravitacional
                     continue;
                 }
 
-                //ESSES IFs ABAIXO S√O PARA IMPEDIR QUE OS CORPOS SAIAM DA TELA, ELES "BATEM" NAS PAREDES E VOLTAM!
-                if (corpo.PosX < raio)
+                //APROXIMA OU AFASTA O CORPO DO CENTRO DE ACORDO COM O ZOOM!
+                double x = centroX + (corpo.PosX - centroX) * zoom;
+                double y = centroY + (corpo.PosY - centroY) * zoom;
+                double r = Math.Max(raio * zoom, 1); //M√çNIMO DE 1 PIXEL PARA O CORPO N√ÉO SUMIR COM O ZOOM OUT!
+
+                if (x - r < 0 || x + r > panel1.Width || y - r < 0 || y + r > panel1.Height)
                 {
-                    corpo.PosX = raio;
-                    corpo.VelX = -corpo.VelX;
-                }
-                else if (corpo.PosX > panel1.Width - raio)
-                {
-                    corpo.PosX = panel1.Width - raio;
-                    corpo.VelX = -corpo.VelX;
+                    algumForaDaTela = true;
                 }
 
-                if(corpo.PosY < raio)
-                {
-                    corpo.PosY = raio;
-                    corpo.VelY = -corpo.VelY;
-                }
-                else if (corpo.PosY > panel1.Height - raio)
-                {
-                    corpo.PosY = panel1.Height - raio;
-                    corpo.VelY = -corpo.VelY;
-                }
+                //AQUI EST√Å CONTIDO OS PADR√ïES DE DESENHO!
+                e.Graphics.FillEllipse(Brushes.White, (float)(x - r), (float)(y - r), (float)(r * 2), (float)(r * 2));
+            }
 
-                //AQUI EST¿ CONTIDO OS PADRıES DE DESENHO!
-                e.Graphics.FillEllipse(Brushes.White,
-                    (float)(corpo.PosX - raio),
-                    (float)(corpo.PosY - raio),
-                    (float)(raio * 2),
-                    (float)(raio * 2));
+            if (algumForaDaTela)
+            {
+                zoom *= 0.98; //SE ALGUM CORPO SAIU DA TELA, AFASTA A C√ÇMERA 2% A CADA FRAME AT√â TODOS CABEREM!
             }
         }
 
-        private async void button1_Click_1(object sender, EventArgs e) //FUN«¬O PARA INICIAR A SIMULA«√O!
+        private async void button1_Click_1(object sender, EventArgs e) //FUN√á√ÇO PARA INICIAR A SIMULA√á√ÉO!
         {
-            //S√O INSTANCIADOS OS DADOS DESEJADOS E GRAVADO OS DADOS INICIAIS!
+            //S√ÉO INSTANCIADOS OS DADOS DESEJADOS E GRAVADO OS DADOS INICIAIS!
             universo = new Universo((int)numericUpDown5.Value, panel1.Height, panel1.Width, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value, (double)numericUpDown4.Value);
             int numIteracoes = (int)numericUpDown6.Value;
             gravacao.Gravar(universo, numIteracoes);
+            zoom = 1;
             panel1.Invalidate();
 
-            //AQUI S√O FEITAS AS ITERA«’ES!
+            //AQUI S√ÉO FEITAS AS ITERA√á√ïES!
             for (int i = 0; i < numIteracoes; i++)
             {
                 universo.Update(1);
@@ -113,10 +111,10 @@ namespace SimuladorGravitacional
                 panel1.Invalidate();
             }
 
-            MessageBox.Show("SimulaÁ„o concluÌda!\nVocÍ pode visualizar a gravaÁ„o ou atÈ carregar ela novamente!", "Conclus„o", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Simula√ß√£o conclu√≠da!\nVoc√™ pode visualizar a grava√ß√£o ou at√© carregar ela novamente!", "Conclus√£o", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        //DESSE NUMERICUPDOWN AT… O 4 S¬O CONFIGURA«’ES DE LIMITES PARA AS SIMULA«’ES!
+        //DESSE NUMERICUPDOWN AT√â O 4 S√ÇO CONFIGURA√á√ïES DE LIMITES PARA AS SIMULA√á√ïES!
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDown1.Value >= numericUpDown2.Value)
@@ -149,7 +147,7 @@ namespace SimuladorGravitacional
             }
         }
 
-        //AQUI FOI TRABALHADO A PRPORÁ¬O DO FORM1!!
+        //AQUI FOI TRABALHADO A PRPOR√ß√ÇO DO FORM1!!
         private void tableLayoutPanel1_Resize(object sender, EventArgs e)
         {
             double proporcao = 16.0 / 9.0;
@@ -167,14 +165,14 @@ namespace SimuladorGravitacional
             int largura;
             int altura;
 
-            // A largura È o limite
+            // A largura √© o limite
             altura = (int)(larguraDisponivel / proporcao);
 
             if (altura <= alturaDisponivel)
             {
                 largura = larguraDisponivel;
             }
-            // A altura È o limite
+            // A altura √© o limite
             else
             {
                 altura = alturaDisponivel;
