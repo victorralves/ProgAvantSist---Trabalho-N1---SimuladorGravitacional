@@ -73,24 +73,13 @@ namespace SimuladorGravitacional
 
         public void Update(double deltaTime)
         {
-            //aqui está ocorrendo a atualização ou mudança dos Frames da execução!
-            for (int i = 0; i < Corpos.Length; i++)
-            {
-                if (Corpos[i] == null) continue;
-                double forcaX = 0;
-                double forcaY = 0;
-                for (int j = i+1; j < Corpos.Length; j++)
+            Parallel.For(0, this.Corpos.Length, i => {
+                lock(this)
                 {
-                    if (i == j || Corpos[j] == null) continue;
-                    if (i != j)
+                    if (Corpos[i] == null) return;
+                    for (int j = i + 1; j < Corpos.Length; j++)
                     {
-                        //CALCULO DAS FORÇAS GRAVITACIONAIS ENTRE OS CORPOS, ONDE É CALCULADO A DISTANCIA ENTRE ELES E A FORÇA QUE UM CORPO EXERCE SOBRE O OUTRO!
-                        double dx = (Corpos[j].PosX - Corpos[i].PosX) * Escala;
-                        double dy = (Corpos[j].PosY - Corpos[i].PosY) * Escala;
-                        double distancia = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
-                        double forca = CalcularForcaGravitacional(Corpos[i], Corpos[j], distancia);
-                        forcaX += forca * dx / distancia;
-                        forcaY += forca * dy / distancia;
+                        if (i == j || Corpos[j] == null) return;
                         if (Corpos[i].Colisao(Corpos[j])) //RESULTADO DE UMA COLISÃO ENTRE DOIS CORPOS, ONDE O CORPO DE MAIOR MASSA ABSORVE O DE MENOR MASSA!
                         {
                             double massaTotal = Corpos[i].Massa + Corpos[j].Massa;
@@ -118,20 +107,41 @@ namespace SimuladorGravitacional
                         }
                     }
                 }
-                if (Corpos[i] == null) continue;
+            });
+            //aqui está ocorrendo a atualização ou mudança dos Frames da execução!
+            Parallel.For(0, this.Corpos.Length, i =>
+            {
+                if (Corpos[i] == null) return;
+                double forcaX = 0;
+                double forcaY = 0;
+                for (int j = i + 1; j < Corpos.Length; j++)
+                {
+                    if (i == j || Corpos[j] == null) continue;
+                    if (i != j)
+                    {
+                        //CALCULO DAS FORÇAS GRAVITACIONAIS ENTRE OS CORPOS, ONDE É CALCULADO A DISTANCIA ENTRE ELES E A FORÇA QUE UM CORPO EXERCE SOBRE O OUTRO!
+                        double dx = (Corpos[j].PosX - Corpos[i].PosX) * Escala;
+                        double dy = (Corpos[j].PosY - Corpos[i].PosY) * Escala;
+                        double distancia = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
+                        double forca = CalcularForcaGravitacional(Corpos[i], Corpos[j], distancia);
+                        forcaX += forca * dx / distancia;
+                        forcaY += forca * dy / distancia;
+                    }
+                }
+                if (Corpos[i] == null) return;
                 double aceleracaoX = forcaX / Corpos[i].Massa;
                 double aceleracaoY = forcaY / Corpos[i].Massa;
                 Corpos[i].VelX += aceleracaoX * deltaTime;
                 Corpos[i].VelY += aceleracaoY * deltaTime;
-            }
+            });
 
-            for (int l = 0; l < Corpos.Length; l++)
-            {
-                if (Corpos[l] == null) continue;
+
+            Parallel.For (0, this.Corpos.Length, i => {
+                if (Corpos[i] == null) return;
                 // atualiza a posição do corpo com base na velocidade
-                Corpos[l].PosX += (Corpos[l].VelX * deltaTime) / Escala;
-                Corpos[l].PosY += (Corpos[l].VelY * deltaTime) / Escala;
-            }
+                Corpos[i].PosX += (Corpos[i].VelX * deltaTime) / Escala;
+                Corpos[i].PosY += (Corpos[i].VelY * deltaTime) / Escala;
+            }) ;
         }
     }
 }
