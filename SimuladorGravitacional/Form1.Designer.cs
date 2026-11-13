@@ -319,7 +319,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(965, 743);
             Controls.Add(tableLayoutPanel1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "Form1";
             Text = "Simulador Gravitacional";
             flowLayoutPanel1.ResumeLayout(false);
