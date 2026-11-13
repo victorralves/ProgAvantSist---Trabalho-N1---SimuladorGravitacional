@@ -79,7 +79,7 @@ namespace SimuladorGravitacional
                     if (Corpos[i] == null) return;
                     for (int j = i + 1; j < Corpos.Length; j++)
                     {
-                        if (i == j || Corpos[j] == null) return;
+                        if (i == j || Corpos[j] == null) continue;
                         if (Corpos[i].Colisao(Corpos[j])) //RESULTADO DE UMA COLISÃO ENTRE DOIS CORPOS, ONDE O CORPO DE MAIOR MASSA ABSORVE O DE MENOR MASSA!
                         {
                             double massaTotal = Corpos[i].Massa + Corpos[j].Massa;
