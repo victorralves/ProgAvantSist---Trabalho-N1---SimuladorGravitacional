@@ -7,6 +7,7 @@ namespace SimuladorGravitacional
     class Universo //A CLASSE UNIVERSO É ONDE PROCESSADO CALCULOS E A GESTÃO DE TODOS OS CORPOS, ELA É A BASE DE TODA A SIMULAÇÃO!
     {
         public double Escala { get; set; }
+        public string[] Nomes { get; set; }
         public Corpo[] Corpos { get; set; }
         public int QuantidadeIteracoes { get; set; }
         public int Largura { get; set; }
@@ -17,12 +18,18 @@ namespace SimuladorGravitacional
         {
             Corpos = new Corpo[qtdCorpos];
             Escala = 0.01;
-            for (int i = 0; i < qtdCorpos; i++)
+            string caminho = "NomeCorpos.txt"; //HÁ UM ARQUIVO TXT COM MAIS DE 300 NOMES SETADOS PARA OS CORPOS!
+            if (File.Exists(caminho))
+            {
+                Nomes = File.ReadAllLines(caminho);
+            }
+            Parallel.For (0, qtdCorpos, i =>
             {
                 Corpo novoCorpo = new Corpo(GerarNome(), GerarNumero(minMassa, maxMassa), GerarNumero(minDensidade, maxDensidade));
                 GerarPosicao(novoCorpo, width, height);
                 Corpos[i] = novoCorpo;
-            }
+            });
+            
         }
 
         //CONSTRUTOR SOBRECARREGADO! FOI NECESSÀRIO POR CONTA DA IMPLEMENTAÇÃO DE GRAVAÇÃO!
@@ -33,18 +40,10 @@ namespace SimuladorGravitacional
         }   
 
         public string GerarNome() //METODO PARA GERAR O NOME DOS CORPOS!
+                                  //PUXAR O NOME DO BANCO DE DADOS
         {
             Random random = new Random();
-            string nome = "";
-            string caminho = "NomeCorpos.txt"; //HÁ UM ARQUIVO TXT COM MAIS DE 300 NOMES SETADOS PARA OS CORPOS!
-
-            if (File.Exists(caminho))
-            {
-                string[] nomes = File.ReadAllLines(caminho);
-                nome = nomes[random.Next(nomes.Length)]; //O NOME DE CADA CORPO É SORTEADO!
-            }
-
-            return nome;
+            return Nomes[random.Next(Nomes.Length)];
         }
 
         public void GerarPosicao(Corpo corpo, int limiteX, int limiteY)//METODO PARA GERAR A POSIÇÃO DOS CORPOS NA TELA!
