@@ -33,6 +33,7 @@ namespace SimuladorGravitacional
         }
         public bool Colisao(Corpo outroCorpo) //CALCULO DA COLISÂO ENTRE CORPOS!
         {
+            if(outroCorpo == null) return false;
             double distancia = Math.Sqrt(Math.Pow(outroCorpo.PosX - this.PosX, 2) + Math.Pow(outroCorpo.PosY - this.PosY, 2));
             return distancia <= (this.Raio() + outroCorpo.Raio()); //USANDO A DISTANCIA ENTRE ELES E A SOMA DOS RAIOS!
         }

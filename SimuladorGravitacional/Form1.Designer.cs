@@ -229,11 +229,10 @@
             // numericUpDown5
             // 
             numericUpDown5.Location = new Point(65, 3);
-            numericUpDown5.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDown5.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             numericUpDown5.Name = "numericUpDown5";
             numericUpDown5.Size = new Size(102, 27);
             numericUpDown5.TabIndex = 1;
-            numericUpDown5.Value = new decimal(new int[] { 50, 0, 0, 0 });
             // 
             // label2
             // 

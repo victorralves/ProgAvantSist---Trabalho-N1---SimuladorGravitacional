@@ -74,14 +74,19 @@ namespace SimuladorGravitacional
         public void Update(double deltaTime)
         {
             Parallel.For(0, this.Corpos.Length, i => {
-                lock(this)
+                if (Corpos[i] == null) return;
+                for (int j = i + 1; j < Corpos.Length; j++)
                 {
-                    if (Corpos[i] == null) return;
-                    for (int j = i + 1; j < Corpos.Length; j++)
+                    Corpo a = Corpos[i], b = Corpos[j];
+                    if (i == j || b == null) continue;
+                    if (a != null && a.Colisao(b))//RESULTADO DE UMA COLISÃO ENTRE DOIS CORPOS, ONDE O CORPO DE MAIOR MASSA ABSORVE O DE MENOR MASSA!
                     {
-                        if (i == j || Corpos[j] == null) continue;
-                        if (Corpos[i].Colisao(Corpos[j])) //RESULTADO DE UMA COLISÃO ENTRE DOIS CORPOS, ONDE O CORPO DE MAIOR MASSA ABSORVE O DE MENOR MASSA!
+                        lock (this)
                         {
+                            if (Corpos[i] == null) break;
+                            if (Corpos[j] == null) continue;
+                            if (!Corpos[i].Colisao(Corpos[j])) continue;
+
                             double massaTotal = Corpos[i].Massa + Corpos[j].Massa;
                             double densidadeMedia = (Corpos[i].Densidade + Corpos[j].Densidade) / 2;
                             double velXFinal = (Corpos[i].Massa * Corpos[i].VelX + Corpos[j].Massa * Corpos[j].VelX) / massaTotal;
