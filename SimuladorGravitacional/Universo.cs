@@ -70,6 +70,18 @@ namespace SimuladorGravitacional
             return forca;
         }
 
+        public Corpo[] ClonarCorpos()
+        {
+            Corpo[] clonados = new Corpo[Corpos.Length];
+            for (int i = 0; i < Corpos.Length; i++)
+            {
+                if (Corpos[i] == null) continue;
+                clonados[i] = Corpos[i].Clonar();
+            }
+            Corpo[] clonadosSemNull = clonados.Where(c => c != null).ToArray();
+            return clonadosSemNull;
+        }
+
         public void Update()
         {
             Parallel.For(0, this.Corpos.Length, i => {
