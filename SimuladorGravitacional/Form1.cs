@@ -1,7 +1,4 @@
-﻿using MySqlConnector;
-using System.ComponentModel;
-
-namespace SimuladorGravitacional
+﻿namespace SimuladorGravitacional
 {
     //AQUI É A CLASSE PRINCIPAL DO FORMULÁRIO, ONDE A SIMULAÇÃO É CONTROLADA E EXIBIDA.
 

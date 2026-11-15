@@ -78,8 +78,7 @@ namespace SimuladorGravitacional
             long primeiroId = comando.LastInsertedId;   //ID DO PRIMEIRO CORPO DESTE INSERT
 
             using var comandoRes = connection.CreateCommand();
-
-            using var transactionRes = connection.BeginTransaction();
+            comandoRes.Transaction = transaction;
 
             StringBuilder sqlRes = new StringBuilder(
             "INSERT INTO resultados (numInteracao, idCorpo, numSimulacao) VALUES ");

@@ -229,10 +229,12 @@
             // numericUpDown5
             // 
             numericUpDown5.Location = new Point(65, 3);
-            numericUpDown5.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
+            numericUpDown5.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDown5.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown5.Name = "numericUpDown5";
             numericUpDown5.Size = new Size(102, 27);
             numericUpDown5.TabIndex = 1;
+            numericUpDown5.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // label2
             // 
@@ -247,12 +249,12 @@
             // 
             numericUpDown6.Location = new Point(78, 37);
             numericUpDown6.Margin = new Padding(3, 4, 3, 4);
-            numericUpDown6.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
+            numericUpDown6.Maximum = new decimal(new int[] { 8000, 0, 0, 0 });
             numericUpDown6.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDown6.Name = "numericUpDown6";
             numericUpDown6.Size = new Size(91, 27);
             numericUpDown6.TabIndex = 3;
-            numericUpDown6.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDown6.Value = new decimal(new int[] { 500, 0, 0, 0 });
             // 
             // tableLayoutPanel1
             // 
