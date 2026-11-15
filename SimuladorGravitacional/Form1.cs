@@ -34,6 +34,8 @@ namespace SimuladorGravitacional
                     universo = gravacao.CarregarGravacao(caminhoArquivo); //APÓS SELECIONADO O ARQUIVO É DESTRINCHADO LÁ NA CLASSE DE GRAVAÇÃO!
                     zoom = 1;
                     panel1.Invalidate();
+
+                    tableLayoutPanel2.Enabled = false; //DESABILITA OS CONTROLES ENQUANTO A SIMULAÇÃO ESTÁ EM ANDAMENTO!
                     for (int i = 0; i < universo.QuantidadeIteracoes; i++)
                     {
                         //COM OS DADOS CARREGADOS, A SIMULAÇÃO É RECRIADA E EXIBIDA NA TELA!
@@ -47,7 +49,7 @@ namespace SimuladorGravitacional
                     Application.Exit();
                 }
             }
-
+            tableLayoutPanel2.Enabled = true; //HABILITA OS CONTROLES NOVAMENTE!
             MessageBox.Show("Simulação concluída!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -104,13 +106,14 @@ namespace SimuladorGravitacional
             panel1.Invalidate();
 
             //AQUI SÃO FEITAS AS ITERAÇÕES!
+            tableLayoutPanel2.Enabled = false; //DESABILITA OS CONTROLES ENQUANTO A SIMULAÇÃO ESTÁ EM ANDAMENTO!
             for (int i = 0; i < numIteracoes; i++)
             {
                 universo.Update(1);
                 await Task.Delay(1);
                 panel1.Invalidate();
             }
-
+            tableLayoutPanel2.Enabled = true; //HABILITA OS CONTROLES NOVAMENTE!
             MessageBox.Show("Simulação concluída!\nVocê pode visualizar a gravação ou até carregar ela novamente!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

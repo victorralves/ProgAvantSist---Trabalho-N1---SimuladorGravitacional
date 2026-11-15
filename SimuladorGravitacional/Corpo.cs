@@ -13,23 +13,21 @@ namespace SimuladorGravitacional
         public double PosY { get; set; }
         public double VelX { get; set; }
         public double VelY { get; set; }
-        public System.Drawing.PointF Posicao { get; set; }
-        public System.Drawing.PointF Velocidade { get; set; }
 
         public double Raio() //AQUI É CALCULADO O RAIO DE CADA CORPO, USANDO A FORMULA DE VOLUME DE UMA ESFERA!
         {
             return Math.Cbrt((3 * Massa) / (4 * Math.PI * Densidade));
         }
 
-        public Corpo(string nome, double massa, double densidade) //CONTRUTOR PASSANDO OS VALORES NECESSÁRIOS PARA A INSTANCIAÇÃO!
+        public Corpo(string nome, double massa, double densidade, double posX = 0, double posY = 0 , double velX = 0, double velY = 0) //CONTRUTOR PASSANDO OS VALORES NECESSÁRIOS PARA A INSTANCIAÇÃO!
         {
             this.Nome = nome;
             this.Massa = massa;
             this.Densidade = densidade;
-            this.PosX = 0; //ESSES VALORES ZERADOS SÂO ATUALIZADOS POSTERIORMENTE!
-            this.PosY = 0;
-            this.VelX = 0;
-            this.VelY = 0;
+            this.PosX = posX; //ESSES VALORES SÂO ATUALIZADOS COM OS PARÂMETROS DO CONTRUTOR!
+            this.PosY = posY;
+            this.VelX = velX;
+            this.VelY = velY;
         }
         public bool Colisao(Corpo outroCorpo) //CALCULO DA COLISÂO ENTRE CORPOS!
         {

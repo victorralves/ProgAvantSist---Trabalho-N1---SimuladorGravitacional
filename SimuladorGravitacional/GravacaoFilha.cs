@@ -107,16 +107,7 @@ namespace SimuladorGravitacional
                         float velX = float.Parse(velCoordenadas[0].Trim(), System.Globalization.CultureInfo.InvariantCulture);
                         float velY = float.Parse(velCoordenadas[1].Trim(), System.Globalization.CultureInfo.InvariantCulture);
 
-                        Corpo novoCorpo = new Corpo(nomeLimpo, massa, densidade); //PASSA AS INFORMAÇÕES PARA O CONSTRUTOR DA CLASSE CORPO!
-
-                        novoCorpo.PosX = posX; //PASSA AS INFORMAÇÕES DE POSIÇÃO E VELOCIDADE PARA O CORPO!
-                        novoCorpo.PosY = posY; //ISSO É SEPARADO POIS O CONSTRUTOR NAO RECEBE!
-
-                        novoCorpo.VelX = velX;
-                        novoCorpo.VelY = velY;
-
-                        novoCorpo.Posicao = new System.Drawing.PointF((float)posX, (float)posY); //AQUI FOI NECESSÁRIO CRIAR UM NOVO PONTO PARA A POSIÇÃO E VELOCIDADE!
-                        novoCorpo.Velocidade = new System.Drawing.PointF((float)velX, (float)velY); //JUSTAMENTE POIS O CONSTRUTOR NÃO RECEBE ESSES VALORES!
+                        Corpo novoCorpo = new Corpo(nomeLimpo, massa, densidade, posX, posY, velX, velY); //PASSA AS INFORMAÇÕES PARA O CONSTRUTOR DA CLASSE CORPO!
 
                         universoCarregado.Corpos[indiceCorpo] = novoCorpo;
                         indiceCorpo++;
