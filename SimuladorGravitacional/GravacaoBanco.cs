@@ -17,7 +17,7 @@ namespace SimuladorGravitacional
                 Server = "localhost",
                 Port = 3307,
                 UserID = "root",
-                Password = "",
+                Password = "123",
                 Database = "trabalhon1",
             };
             using var connection = new MySqlConnection(builder.ConnectionString);
@@ -42,13 +42,13 @@ namespace SimuladorGravitacional
                 Server = "localhost",
                 Port = 3307,
                 UserID = "root",
-                Password = "",
+                Password = "123",
                 Database = "trabalhon1",
             };
             using var connection = new MySqlConnection(builder.ConnectionString);
             connection.Open();
 
-            using var comando = new MySqlCommand();
+            using var comando = connection.CreateCommand();
 
             using var transaction = connection.BeginTransaction();
             comando.Transaction = transaction;
@@ -73,15 +73,13 @@ namespace SimuladorGravitacional
                 comando.Parameters.AddWithValue($"@densidade{k}", corpos[k].Densidade);
             }
 
-            transaction.Commit();
             comando.CommandText = sql.ToString();
             comando.ExecuteNonQuery();
             long primeiroId = comando.LastInsertedId;   //ID DO PRIMEIRO CORPO DESTE INSERT
 
-            using var comandoRes = new MySqlCommand();
+            using var comandoRes = connection.CreateCommand();
 
             using var transactionRes = connection.BeginTransaction();
-            comandoRes.Transaction = transactionRes;
 
             StringBuilder sqlRes = new StringBuilder(
             "INSERT INTO resultados (numInteracao, idCorpo, numSimulacao) VALUES ");
@@ -95,9 +93,9 @@ namespace SimuladorGravitacional
             comandoRes.Parameters.AddWithValue("@iter", numIteracao);   //O MESMO VALOR PARA TODAS AS LINHAS
             comandoRes.Parameters.AddWithValue("@sim", numSimulacao);
 
-            transactionRes.Commit();
-            comando.CommandText = sql.ToString();
-            comando.ExecuteNonQuery();
+            comandoRes.CommandText = sqlRes.ToString();
+            comandoRes.ExecuteNonQuery();
+            transaction.Commit();
         }
     }
 }
