@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MySqlConnector;
+using System.ComponentModel;
 
 namespace SimuladorGravitacional
 {
@@ -31,7 +32,7 @@ namespace SimuladorGravitacional
                 if (openFileDialog.ShowDialog() == DialogResult.OK) // A PESSOA SELECIONA UM ARQUIVO NO PC E NO FORMATO CERTO!
                 {
                     string caminhoArquivo = openFileDialog.FileName;
-                    universo = gravacao.CarregarGravacao(caminhoArquivo); //APÓS SELECIONADO O ARQUIVO É DESTRINCHADO LÁ NA CLASSE DE GRAVAÇÃO!
+                    //universo = gravacao.GravarIteracao(caminhoArquivo); //APÓS SELECIONADO O ARQUIVO É DESTRINCHADO LÁ NA CLASSE DE GRAVAÇÃO!
                     zoom = 1;
                     panel1.Invalidate();
 
@@ -98,23 +99,42 @@ namespace SimuladorGravitacional
 
         private async void button1_Click_1(object sender, EventArgs e) //FUNÇÂO PARA INICIAR A SIMULAÇÃO!
         {
-            //SÃO INSTANCIADOS OS DADOS DESEJADOS E GRAVADO OS DADOS INICIAIS!
-            universo = new Universo((int)numericUpDown5.Value, panel1.Height, panel1.Width, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value, (double)numericUpDown4.Value);
-            int numIteracoes = (int)numericUpDown6.Value;
-            gravacao.Gravar(universo, numIteracoes);
-            zoom = 1;
-            panel1.Invalidate();
-
-            //AQUI SÃO FEITAS AS ITERAÇÕES!
             tableLayoutPanel2.Enabled = false; //DESABILITA OS CONTROLES ENQUANTO A SIMULAÇÃO ESTÁ EM ANDAMENTO!
-            for (int i = 0; i < numIteracoes; i++)
+            try
             {
-                universo.Update();
-                await Task.Delay(1);
+                //SÃO INSTANCIADOS OS DADOS DESEJADOS E GRAVADO OS DADOS INICIAIS!
+                int quantidadeCorpos = (int)numericUpDown5.Value;
+                int numIteracoes = (int)numericUpDown6.Value;
+                universo = new Universo(quantidadeCorpos, panel1.Height, panel1.Width, (double)numericUpDown1.Value, (double)numericUpDown2.Value, (double)numericUpDown3.Value, (double)numericUpDown4.Value);
+
+                int idSimulacao = gravacao.IniciarSimulacao(quantidadeCorpos, numIteracoes);
+
+                zoom = 1;
                 panel1.Invalidate();
+
+                //AQUI SÃO FEITAS AS ITERAÇÕES!
+                for (int i = 0; i < numIteracoes; i++)
+                {
+                    var copia = universo.ClonarCorpos(); //CÓPIA OS CORPOS PARA GRAVAR NO BANCO DE DADOS!
+                    Parallel.Invoke(
+                    () => gravacao.GravarIteracao(idSimulacao, i, copia), //GRAVA A ITERAÇÃO ATUAL NO BANCO DE DADOS!
+                    () => universo.Update() //ATUALIZA OS CORPOS PARA A PRÓXIMA ITERAÇÃO!    
+                    );
+                    await Task.Delay(1);
+                    panel1.Invalidate();
+                }
+
+                gravacao.GravarIteracao(idSimulacao, numIteracoes, universo.ClonarCorpos()); //GRAVA A ÚLTIMA ITERAÇÃO NO BANCO DE DADOS!
+                MessageBox.Show("Simulação concluída!\nVocê pode visualizar a gravação ou até carregar ela novamente!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            tableLayoutPanel2.Enabled = true; //HABILITA OS CONTROLES NOVAMENTE!
-            MessageBox.Show("Simulação concluída!\nVocê pode visualizar a gravação ou até carregar ela novamente!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Ocorreu um erro durante a simulação: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                tableLayoutPanel2.Enabled = true; //HABILITA OS CONTROLES NOVAMENTE!
+            }
         }
 
         //DESSE NUMERICUPDOWN ATÉ O 4 SÂO CONFIGURAÇÕES DE LIMITES PARA AS SIMULAÇÕES!
