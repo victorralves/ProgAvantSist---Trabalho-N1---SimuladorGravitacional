@@ -35,5 +35,10 @@ namespace SimuladorGravitacional
             double distancia = Math.Sqrt(Math.Pow(outroCorpo.PosX - this.PosX, 2) + Math.Pow(outroCorpo.PosY - this.PosY, 2));
             return distancia <= (this.Raio() + outroCorpo.Raio()); //USANDO A DISTANCIA ENTRE ELES E A SOMA DOS RAIOS!
         }
+
+        public Corpo Clonar() //CLONANDO UM CORPO, USANDO O CONSTRUTOR!
+        {
+            return new Corpo(this.Nome, this.Massa, this.Densidade, this.PosX, this.PosY, this.VelX, this.VelY);
+        }
     }
 }
