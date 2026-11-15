@@ -7,7 +7,7 @@ namespace SimuladorGravitacional
     public partial class Form1 : Form
     {
         Universo universo = new Universo(0, 0, 0, 0, 0, 0, 0);
-        GravacaoFilha gravacao = new GravacaoFilha();
+        GravacaoBanco gravacao = new GravacaoBanco();
 
         //CONTROLA O ZOOM DA TELA: 1 = TAMANHO NORMAL, MENOR QUE 1 = ZOOM OUT!
         double zoom = 1;
@@ -39,7 +39,7 @@ namespace SimuladorGravitacional
                     for (int i = 0; i < universo.QuantidadeIteracoes; i++)
                     {
                         //COM OS DADOS CARREGADOS, A SIMULAÇÃO É RECRIADA E EXIBIDA NA TELA!
-                        universo.Update(1);
+                        universo.Update();
                         await Task.Delay(1);
                         panel1.Invalidate();
                     }
@@ -109,7 +109,7 @@ namespace SimuladorGravitacional
             tableLayoutPanel2.Enabled = false; //DESABILITA OS CONTROLES ENQUANTO A SIMULAÇÃO ESTÁ EM ANDAMENTO!
             for (int i = 0; i < numIteracoes; i++)
             {
-                universo.Update(1);
+                universo.Update();
                 await Task.Delay(1);
                 panel1.Invalidate();
             }

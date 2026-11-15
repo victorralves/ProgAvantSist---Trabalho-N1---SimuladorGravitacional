@@ -70,7 +70,7 @@ namespace SimuladorGravitacional
             return forca;
         }
 
-        public void Update(double deltaTime)
+        public void Update()
         {
             Parallel.For(0, this.Corpos.Length, i => {
                 if (Corpos[i] == null) return;
@@ -135,16 +135,16 @@ namespace SimuladorGravitacional
                 if (Corpos[i] == null) return;
                 double aceleracaoX = forcaX / Corpos[i].Massa;
                 double aceleracaoY = forcaY / Corpos[i].Massa;
-                Corpos[i].VelX += aceleracaoX * deltaTime;
-                Corpos[i].VelY += aceleracaoY * deltaTime;
+                Corpos[i].VelX += aceleracaoX;
+                Corpos[i].VelY += aceleracaoY;
             });
 
 
             Parallel.For (0, this.Corpos.Length, i => {
                 if (Corpos[i] == null) return;
                 // atualiza a posição do corpo com base na velocidade
-                Corpos[i].PosX += (Corpos[i].VelX * deltaTime) / Escala;
-                Corpos[i].PosY += (Corpos[i].VelY * deltaTime) / Escala;
+                Corpos[i].PosX += (Corpos[i].VelX) / Escala;
+                Corpos[i].PosY += (Corpos[i].VelY) / Escala;
             }) ;
         }
     }
