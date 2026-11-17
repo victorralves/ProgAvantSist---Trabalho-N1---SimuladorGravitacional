@@ -15,9 +15,9 @@ namespace SimuladorGravitacional
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = "localhost",
-                Port = 3307,
+                Port = 3306,
                 UserID = "root",
-                Password = "123",
+                Password = "root",
                 Database = "trabalhon1",
             };
             using var connection = new MySqlConnection(builder.ConnectionString);
@@ -36,13 +36,13 @@ namespace SimuladorGravitacional
         public override void GravarIteracao(int numSimulacao, int numIteracao, Corpo[] corpos)
         {
             //AQUI É GRAVADA CADA ITERAÇÃO, ELA VAI RECEBER O NÚMERO DA SIMULAÇÃO, O NÚMERO DA ITERAÇÃO E OS CORPOS!
-            
+
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = "localhost",
-                Port = 3307,
+                Port = 3306,
                 UserID = "root",
-                Password = "123",
+                Password = "root",
                 Database = "trabalhon1",
             };
             using var connection = new MySqlConnection(builder.ConnectionString);
@@ -95,6 +95,28 @@ namespace SimuladorGravitacional
             comandoRes.CommandText = sqlRes.ToString();
             comandoRes.ExecuteNonQuery();
             transaction.Commit();
+        }
+        public int[] ListarSimulacao() //AQUI É LISTADO O NÚMERO DAS SIMULAÇÕES, ELA VAI RETORNAR UM ARRAY DE INTEIROS!
+        {
+            var builder = new MySqlConnectionStringBuilder
+            {
+                Server = "localhost",
+                Port = 3306,
+                UserID = "root",
+                Password = "root",
+                Database = "trabalhon1",
+            };
+            using var connection = new MySqlConnection(builder.ConnectionString);
+            connection.Open();
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT numSimulacao FROM simulacao;";
+            List<int> simulacoes = new List<int>();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                simulacoes.Add(reader.GetInt32(0));
+            }
+            return simulacoes.ToArray();
         }
     }
 }

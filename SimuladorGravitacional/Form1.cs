@@ -33,7 +33,8 @@
             tableLayoutPanel2.Enabled = false;
             try
             {
-                
+                universo = new Universo(0, panel1.Height, panel1.Width, 0, 0, 0, 0);
+                universo.Corpos = gravacao.CarregarSimulacao(numSimulacao, out int numIteracoes);
             }
             catch(Exception ex)
             {

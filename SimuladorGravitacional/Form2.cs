@@ -22,29 +22,15 @@ namespace SimuladorGravitacional
         private void Form2_Load(object sender, EventArgs e)
         {
             //AQUI É INICIADA A SIMULAÇÃO, ELA VAI RETORNAR O NÚMERO DA SIMULAÇÃO!
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "localhost",
-                Port = 3307,
-                UserID = "root",
-                Password = "123",
-                Database = "trabalhon1",
-            };
-            using var connection = new MySqlConnection(builder.ConnectionString);
-            connection.Open();
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT numSimulacao FROM simulacao;";
+            GravacaoBanco gravacao = new GravacaoBanco();
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while(reader.Read())
+            int[] simulacoes = gravacao.ListarSimulacao();
+            foreach (int numSimulacao in simulacoes)
             {
-                int numSimulacao = reader.GetInt32(0);
                 var button = new Button() { Text = numSimulacao.ToString(), Size = new Size(60, 60) };
                 button.Click += button_Clicado;
                 flowLayoutPanel1.Controls.Add(button);
             }
-            reader.Close();
         }
         
         private void button_Clicado(object ? sender, EventArgs e)
