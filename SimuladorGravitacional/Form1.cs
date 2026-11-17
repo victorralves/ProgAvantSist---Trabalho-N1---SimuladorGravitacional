@@ -44,7 +44,7 @@
                     {
                         universo.Corpos = corpos;
                         panel1.Invalidate();
-                        await Task.Delay(1); // Pequeno atraso para permitir a atualização da interface
+                        await Task.Delay(16); // Pequeno atraso para permitir a atualização da interface
                     }
                 }; 
                 MessageBox.Show("Replay concluído!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -126,7 +126,7 @@
                     () => gravacao.GravarIteracao(idSimulacao, i, copia), //GRAVA A ITERAÇÃO ATUAL NO BANCO DE DADOS!
                     () => universo.Update() //ATUALIZA OS CORPOS PARA A PRÓXIMA ITERAÇÃO!    
                     );
-                    await Task.Delay(1);
+                    await Task.Delay(16);
                     panel1.Invalidate();
                 }
 

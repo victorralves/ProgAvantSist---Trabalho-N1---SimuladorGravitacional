@@ -12,6 +12,7 @@ namespace SimuladorGravitacional
         public int QuantidadeIteracoes { get; set; }
         public int Largura { get; set; }
         public int Altura { get; set; }
+        private readonly object lockObject = new object();
 
         //CONSTRUTOR DA CLASSE UNIVERSO, ELE É RESPONSÁVEL POR GERIR OS CORPOS!
         public Universo(int qtdCorpos, int height, int width, double minMassa, double maxMassa, double minDensidade, double maxDensidade)
@@ -93,7 +94,7 @@ namespace SimuladorGravitacional
                     if (i == j || b == null) continue;
                     if (a != null && a.Colisao(b))//RESULTADO DE UMA COLISÃO ENTRE DOIS CORPOS, ONDE O CORPO DE MAIOR MASSA ABSORVE O DE MENOR MASSA!
                     {
-                        lock (this)
+                        lock (lockObject)
                         {
                             if (Corpos[i] == null) break;
                             if (Corpos[j] == null) continue;
