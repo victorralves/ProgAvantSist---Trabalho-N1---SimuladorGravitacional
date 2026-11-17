@@ -24,7 +24,7 @@ namespace SimuladorGravitacional
             connection.Open();
             //CRIA O COMANDO DO BD E DEFINE A QUERY COM OS PARAMETROS!
             using var command = connection.CreateCommand();
-            command.CommandText = @"INSERT INTO simulacao (dataSimulacao, qtdCorposInicial, numInteracoes) VALUES (@data, @qtd, @iter);";
+            command.CommandText = @"INSERT INTO simulacao (dataSimulacao, qtdCorposInicial, numIteracoes) VALUES (@data, @qtd, @iter);";
             command.Parameters.AddWithValue("@data", DateTime.Now);
             command.Parameters.AddWithValue("@qtd", qtdCorpos);
             command.Parameters.AddWithValue("@iter", numIteracoes);
@@ -81,7 +81,7 @@ namespace SimuladorGravitacional
             comandoRes.Transaction = transaction;
 
             StringBuilder sqlRes = new StringBuilder(
-            "INSERT INTO resultados (numInteracao, idCorpo, numSimulacao) VALUES ");
+            "INSERT INTO resultados (numIteracao, idCorpo, numSimulacao) VALUES ");
 
             for (int k = 0; k < corpos.Length; k++)
             {
