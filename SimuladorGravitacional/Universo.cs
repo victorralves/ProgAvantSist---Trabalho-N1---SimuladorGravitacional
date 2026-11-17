@@ -23,12 +23,13 @@ namespace SimuladorGravitacional
             {
                 Nomes = File.ReadAllLines(caminho);
             }
-            Parallel.For (0, qtdCorpos, i =>
+            Random random = new Random();
+            for (int i = 0; i < qtdCorpos; i++)
             {
-                Corpo novoCorpo = new Corpo(GerarNome(), GerarNumero(minMassa, maxMassa), GerarNumero(minDensidade, maxDensidade));
-                GerarPosicao(novoCorpo, width, height);
+                Corpo novoCorpo = new Corpo(GerarNome(random), GerarNumero(minMassa, maxMassa,random), GerarNumero(minDensidade, maxDensidade,random));
+                GerarPosicao(novoCorpo, width, height, random);
                 Corpos[i] = novoCorpo;
-            });
+            };
             
         }
 
@@ -39,16 +40,16 @@ namespace SimuladorGravitacional
             Escala = 0.01;
         }   
 
-        public string GerarNome() //METODO PARA GERAR O NOME DOS CORPOS!
+        public string GerarNome(Random r) //METODO PARA GERAR O NOME DOS CORPOS!
                                   //PUXAR O NOME DO BANCO DE DADOS
         {
-            Random random = new Random();
+            Random random = r;
             return Nomes[random.Next(Nomes.Length)];
         }
 
-        public void GerarPosicao(Corpo corpo, int limiteX, int limiteY)//METODO PARA GERAR A POSIÇÃO DOS CORPOS NA TELA!
+        public void GerarPosicao(Corpo corpo, int limiteX, int limiteY, Random r)//METODO PARA GERAR A POSIÇÃO DOS CORPOS NA TELA!
         {
-            Random random = new Random();
+            Random random = r;
             int raio = (int)Math.Ceiling(corpo.Raio());
             //GERA UMA POSIÇÃO ALEATÓRIA PARA O CORPO, ENTRE RAIO E LIMITE - RAIO, PARA ELE NASCER INTEIRO DENTRO DA TELA!
             corpo.PosX = random.Next(raio, Math.Max(raio + 1, limiteX - raio));
@@ -56,9 +57,9 @@ namespace SimuladorGravitacional
         }
 
         //JÀ ESSE METODO VAI GERAR OS NUMEROS ALEATÓRIOS PARA A MASSA E DENSIDADE DOS CORPOS DE ACORDO COM O SELECIONADO NOS LIMITES!
-        public double GerarNumero(double min, double max)
+        public double GerarNumero(double min, double max, Random r)
         {
-            Random random = new Random();
+            Random random = r;
             return random.NextDouble() * (max - min) + min;
         }
 
@@ -130,7 +131,7 @@ namespace SimuladorGravitacional
                 if (Corpos[i] == null) return;
                 double forcaX = 0;
                 double forcaY = 0;
-                for (int j = i + 1; j < Corpos.Length; j++)
+                for (int j = 0; j < Corpos.Length; j++)
                 {
                     if (i == j || Corpos[j] == null) continue;
                     if (i != j)
@@ -152,12 +153,12 @@ namespace SimuladorGravitacional
             });
 
 
-            Parallel.For (0, this.Corpos.Length, i => {
-                if (Corpos[i] == null) return;
+            for (int i =0; i < this.Corpos.Length; i++) {
+                if (Corpos[i] == null) continue;
                 // atualiza a posição do corpo com base na velocidade
                 Corpos[i].PosX += (Corpos[i].VelX) / Escala;
                 Corpos[i].PosY += (Corpos[i].VelY) / Escala;
-            }) ;
+            };
         }
     }
 }

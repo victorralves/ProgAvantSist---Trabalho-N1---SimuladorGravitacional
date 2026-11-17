@@ -9,17 +9,17 @@ namespace SimuladorGravitacional
 {
     class GravacaoBanco : Gravacao //ESCOLHEMOS O NOME COMO GRAVAÇÂO FILHA PARA NÃO FUGIR MUITO DO DESEJADO INICIALMENTE!
     {
+        MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+        {
+            Server = "localhost",
+            Port = 3306,
+            UserID = "root",
+            Password = "root",
+            Database = "trabalhon1"
+        };
         public override int IniciarSimulacao(int qtdCorpos, int numIteracoes)
         {
             //AQUI É INICIADA A SIMULAÇÃO, ELA VAI RETORNAR O NÚMERO DA SIMULAÇÃO!
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "localhost",
-                Port = 3306,
-                UserID = "root",
-                Password = "root",
-                Database = "trabalhon1",
-            };
             using var connection = new MySqlConnection(builder.ConnectionString);
             connection.Open();
             //CRIA O COMANDO DO BD E DEFINE A QUERY COM OS PARAMETROS!
@@ -37,14 +37,6 @@ namespace SimuladorGravitacional
         {
             //AQUI É GRAVADA CADA ITERAÇÃO, ELA VAI RECEBER O NÚMERO DA SIMULAÇÃO, O NÚMERO DA ITERAÇÃO E OS CORPOS!
 
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "localhost",
-                Port = 3306,
-                UserID = "root",
-                Password = "root",
-                Database = "trabalhon1",
-            };
             using var connection = new MySqlConnection(builder.ConnectionString);
             connection.Open();
 
@@ -98,14 +90,6 @@ namespace SimuladorGravitacional
         }
         public int[] ListarSimulacao() //AQUI É LISTADO O NÚMERO DAS SIMULAÇÕES, ELA VAI RETORNAR UM ARRAY DE INTEIROS!
         {
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "localhost",
-                Port = 3306,
-                UserID = "root",
-                Password = "root",
-                Database = "trabalhon1",
-            };
             using var connection = new MySqlConnection(builder.ConnectionString);
             connection.Open();
             using var command = connection.CreateCommand();
@@ -117,6 +101,43 @@ namespace SimuladorGravitacional
                 simulacoes.Add(reader.GetInt32(0));
             }
             return simulacoes.ToArray();
+        }
+        public Corpo[] CarregarGravacao(int numSimulacao, int numIteracao) //AQUI É CARREGADO A GRAVAÇÃO, ELA VAI RECEBER O NÚMERO DA SIMULAÇÃO E RETORNAR UM ARRAY DE CORPOS!
+        {
+            using var connection = new MySqlConnection(builder.ConnectionString);
+            connection.Open();
+            using var command = connection.CreateCommand();
+
+
+            command.CommandText = @"SELECT c.nomeCorpo, c.massaCorpo, c.densidadeCorpo, c.posX, c.posY, c.velX, c.velY
+                                    FROM corpos c
+                                    JOIN resultados r ON c.idCorpo = r.idCorpo
+                                    WHERE r.numSimulacao = @sim AND r.numIteracao = @iter;";
+            command.Parameters.AddWithValue("@sim", numSimulacao);
+            command.Parameters.AddWithValue("@iter", numIteracao);
+            List<Corpo> corpos = new List<Corpo>();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                string nome = reader.GetString(0);
+                double massa = reader.GetDouble(1);
+                double densidade = reader.GetDouble(2);
+                double posX = reader.GetDouble(3);
+                double posY = reader.GetDouble(4);
+                double velX = reader.GetDouble(5);
+                double velY = reader.GetDouble(6);
+                corpos.Add(new Corpo(nome, massa, densidade, posX, posY, velX, velY));
+            }
+            return corpos.ToArray();
+        }
+        public int BuscarQtdIteracoes(int numSimulacao) //AQUI É BUSCADO A QUANTIDADE DE ITERAÇÕES, ELA VAI RECEBER O NÚMERO DA SIMULAÇÃO E RETORNAR UM INTEIRO!
+        {
+            using var connection = new MySqlConnection(builder.ConnectionString);
+            connection.Open();
+            using var command = connection.CreateCommand();
+            command.CommandText = @"SELECT COUNT(DISTINCT numIteracao) FROM resultados WHERE numSimulacao = @sim;";
+            command.Parameters.AddWithValue("@sim", numSimulacao);
+            return Convert.ToInt32(command.ExecuteScalar());
         }
     }
 }

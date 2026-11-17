@@ -28,15 +28,28 @@
             //MessageBox.Show("Replay concluído!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public void ReceberSimulacao(int numSimulacao) 
+        public async void ReceberSimulacao(int numSimulacao) 
         {
+            zoom = 1; // Resetando o zoom a cada carregamento de simulação
             tableLayoutPanel2.Enabled = false;
+            var gravacao = new GravacaoBanco();
             try
             {
+                var numIteracoes = gravacao.BuscarQtdIteracoes(numSimulacao);
                 universo = new Universo(0, panel1.Height, panel1.Width, 0, 0, 0, 0);
-                universo.Corpos = gravacao.CarregarSimulacao(numSimulacao, out int numIteracoes);
+                for(int i = 0; i < numIteracoes; i++)
+                {
+                    var corpos = gravacao.CarregarGravacao(numSimulacao, i);
+                    if (corpos != null)
+                    {
+                        universo.Corpos = corpos;
+                        panel1.Invalidate();
+                        await Task.Delay(1); // Pequeno atraso para permitir a atualização da interface
+                    }
+                }; 
+                MessageBox.Show("Replay concluído!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar a simulação: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
