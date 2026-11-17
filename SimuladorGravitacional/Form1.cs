@@ -22,33 +22,28 @@
 
         private async void button2_Click(object sender, EventArgs e) // FUNçÃO PARA CARREGAR UMA SIMULAÇÃO GRAVADA!
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "Arquivos de texto (*.txt)|*.txt|Todos os arquivos (*.*)|*.*";
-                openFileDialog.Title = "Selecione o arquivo de nomes dos corpos";
-                if (openFileDialog.ShowDialog() == DialogResult.OK) // A PESSOA SELECIONA UM ARQUIVO NO PC E NO FORMATO CERTO!
-                {
-                    string caminhoArquivo = openFileDialog.FileName;
-                    //universo = gravacao.GravarIteracao(caminhoArquivo); //APÓS SELECIONADO O ARQUIVO É DESTRINCHADO LÁ NA CLASSE DE GRAVAÇÃO!
-                    zoom = 1;
-                    panel1.Invalidate();
+            Form2 carregarGravacao = new Form2(this);
+            carregarGravacao.Show();
 
-                    tableLayoutPanel2.Enabled = false; //DESABILITA OS CONTROLES ENQUANTO A SIMULAÇÃO ESTÁ EM ANDAMENTO!
-                    for (int i = 0; i < universo.QuantidadeIteracoes; i++)
-                    {
-                        //COM OS DADOS CARREGADOS, A SIMULAÇÃO É RECRIADA E EXIBIDA NA TELA!
-                        universo.Update();
-                        await Task.Delay(1);
-                        panel1.Invalidate();
-                    }
-                }
-                else
-                {
-                    Application.Exit();
-                }
+            //MessageBox.Show("Replay concluído!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public void ReceberSimulacao(int numSimulacao) 
+        {
+            tableLayoutPanel2.Enabled = false;
+            try
+            {
+                
             }
-            tableLayoutPanel2.Enabled = true; //HABILITA OS CONTROLES NOVAMENTE!
-            MessageBox.Show("Simulação concluída!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar a simulação: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Aqui você pode adicionar qualquer código que precise ser executado após o carregamento da simulação, se necessário.
+                tableLayoutPanel2.Enabled = true;
+            }
         }
 
         private void panel1_Paint_1(object sender, PaintEventArgs e) // FUNÇÃO PARA DESENHAR OS CORPOS NA TELA!
